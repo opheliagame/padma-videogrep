@@ -1,7 +1,0 @@
-node_modules/
-outputs/
-data/
-.vscode/
-dist/
-
-*.dev.config.js
