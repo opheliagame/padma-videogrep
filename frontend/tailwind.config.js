@@ -4,14 +4,13 @@ export default {
   theme: {
     extend: {
       backgroundImage: {
-        'knit-pattern': "url(images/thread-oil.png)",
+        'knit-pattern': 'url(images/thread-oil.png)'
       },
       fontFamily: {
-        'display': ['Teko', 'sans-serif'],
-        'sans': ['Biryani', 'sans-serif'],
+        display: ['Teko', 'sans-serif'],
+        sans: ['Biryani', 'sans-serif']
       }
-    },
+    }
   },
-  plugins: [],
+  plugins: []
 }
-
