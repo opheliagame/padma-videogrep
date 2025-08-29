@@ -1,8 +1,6 @@
 <script setup>
-import { useClipsStore } from '../stores/clips'
 import { useSequenceStore } from '../stores/sequencer'
-import { storeToRefs } from 'pinia'
-import { ref, watch, watchEffect, onMounted, useTemplateRef } from 'vue'
+import { watchEffect, onMounted, useTemplateRef } from 'vue'
 
 // const clips = useClipsStore()
 const sequencer = useSequenceStore()
@@ -10,9 +8,8 @@ let currentVideo = sequencer.currentUrl
 let currentTranscript = sequencer.currentTranscript
 let isPlaying = sequencer.playing
 console.log(isPlaying)
-const videoRef = useTemplateRef("video")
-const preloadVideoRef = useTemplateRef("preloadVideo")
-
+const videoRef = useTemplateRef('video')
+const preloadVideoRef = useTemplateRef('preloadVideo')
 
 // if(sequencer.playing) {
 //   videoRef.value.play()
@@ -20,14 +17,14 @@ const preloadVideoRef = useTemplateRef("preloadVideo")
 //   videoRef.value.pause()
 // }
 
-
 function onTimeUpdate(event) {
   // console.log('time update', event)
 
-  
-  if(event.target.currentTime >= sequencer.currentEndTime || event.target.currentTime >= event.target.duration) {
-    
-    console.log("playing next")
+  if (
+    event.target.currentTime >= sequencer.currentEndTime ||
+    event.target.currentTime >= event.target.duration
+  ) {
+    console.log('playing next')
     // sequencer.setPlaying(false)
     sequencer.playNext()
   }
@@ -39,7 +36,7 @@ watchEffect(() => {
   }
 
   console.log('playing', sequencer.playing)
-  console.log("seeking video at ", sequencer.currentStartTime)
+  console.log('seeking video at ', sequencer.currentStartTime)
   videoRef.value.volume = 0.5
   videoRef.value.currentTime = sequencer.currentStartTime
 
@@ -50,24 +47,26 @@ watchEffect(() => {
   } else {
     videoRef.value.play()
   }
-
 })
 
 onMounted(() => {
   console.log('mounted')
   console.log(videoRef.value)
 
-
   // videoRef.value.play()
 })
-
 </script>
 
 <template>
   <div class="w-full h-full p-6 relative">
-    <video class="w-full h-full overflow-hidden" ref="video" crossorigin="anonymous" v-if="sequencer.currentSequence != null" @timeupdate="onTimeUpdate"
-      >
-      <source :src="currentVideo" type="video/mp4">
+    <video
+      class="w-full h-full overflow-hidden"
+      ref="video"
+      crossorigin="anonymous"
+      v-if="sequencer.currentSequence != null"
+      @timeupdate="onTimeUpdate"
+    >
+      <source :src="currentVideo" type="video/mp4" />
       Your browser does not support the video tag.
 
       <!-- TODO add transcript -->
@@ -77,8 +76,13 @@ onMounted(() => {
       <p>{{ currentTranscript }}</p>
     </div>
 
-
     <!-- preload next video -->
-    <video crossorigin="anonymous" ref="preloadVideo" class="hidden" :src="sequencer.nextClipUrl" preload="auto"></video>
+    <video
+      crossorigin="anonymous"
+      ref="preloadVideo"
+      class="hidden"
+      :src="sequencer.nextClipUrl"
+      preload="auto"
+    ></video>
   </div>
 </template>

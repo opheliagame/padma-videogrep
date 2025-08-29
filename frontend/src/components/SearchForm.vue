@@ -19,7 +19,6 @@ const onInput = (e) => {
 const onClick = async (e) => {
   e.preventDefault()
 
-
   error.value = false
   isClicked.value = true
   isFinished.value = false
@@ -42,46 +41,25 @@ const onClick = async (e) => {
 </script>
 
 <template>
-  <form @submit="onClick" class="w-full flex md:flex-row flex-col gap-2 header-text dark:inputDarkModeOverride">
+  <form
+    @submit="onClick"
+    class="w-full flex md:flex-row flex-col gap-2 header-text dark:inputDarkModeOverride"
+  >
     <div class="flex md:block justify-between gap-2">
-      <input type="text" name="query" id="input-query" :value="query.queryTranscripts"
-        placeholder="What are you thinking about" @input="onInput($event)"
-        class="dark:text-slate-400 dark:inputDarkModeOverride rounded-full px-2 py-1 flex-1 lg:min-w-96" />
-
-      <!-- <button class="md:hidden">></button> -->
+      <input
+        type="text"
+        name="query"
+        id="input-query"
+        :value="query.queryTranscripts"
+        placeholder="What are you thinking about"
+        @input="onInput($event)"
+        class="dark:text-slate-400 dark:inputDarkModeOverride rounded-full px-2 py-1 flex-1 lg:min-w-96"
+      />
 
       <div class="md:hidden">
         <button class="header-button" @click="onClick">search</button>
       </div>
     </div>
-
-    <!-- <div class="flex flex-row gap-2 px-1">
-      <div>
-        <label class="pe-2" for="range">Number of videos</label>
-        <input
-          type="number"
-          name="range"
-          id="input-range"
-          :value="query.range"
-          @input="query.setRange($event.target.value)"
-          aria-placeholder="Number of videos"
-          class="dark:text-slate-400 rounded-full px-2 py-1 max-w-16"
-        />
-      </div>
-
-      <div>
-        <label class="pe-2" for="cut-length">Duration of cut</label>
-        <input
-          type="number"
-          name="cut-length"
-          id="input-cut-length"
-          :value="query.duration"
-          @input="query.setDuration($event.target.value)"
-          aria-placeholder="Duration of videos"
-          class="dark:text-slate-400 rounded-full px-2 py-1 max-w-16"
-        />
-      </div>
-    </div> -->
 
     <div class="hidden md:block">
       <button class="header-button" @click="onClick">search</button>
@@ -92,9 +70,6 @@ const onClick = async (e) => {
     <p>
       You are looking for some
       <span class="green-underline">{{ query.queryTranscripts }}</span> <LoadingDots />
-      <!-- that are not more than <span class="green-underline">{{ query.duration }}</span> seconds
-      long, and not more than <span class="green-underline">{{ query.range }}</span> when put
-      together.<LoadingDots /> -->
     </p>
   </div>
 

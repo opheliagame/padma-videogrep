@@ -1,9 +1,9 @@
-import { defineStore } from "pinia";
-import { ref } from "vue";
+import { defineStore } from 'pinia'
+import { ref } from 'vue'
 
 export const useQueryStore = defineStore('query', () => {
-  const queryTranscripts = ref("love")
-  const queryKeywords = ref("")
+  const queryTranscripts = ref('love')
+  const queryKeywords = ref('')
   const range = ref(10)
   const duration = ref(10)
 
@@ -17,8 +17,9 @@ export const useQueryStore = defineStore('query', () => {
     duration.value = value
   }
   function reset() {
-    queryTranscripts.value = "love"
-    queryKeywords.value = ""
+    queryTranscripts.value = 'love'
+    queryKeywords.value = ''
+    // TODO make range and duration dynamic
     range.value = 10
     duration.value = 10
   }
@@ -31,8 +32,6 @@ export const useQueryStore = defineStore('query', () => {
     setQueryTranscripts,
     setRange,
     setDuration,
-    reset,
-
+    reset
   }
-
 })

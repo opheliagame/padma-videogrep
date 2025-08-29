@@ -28,8 +28,6 @@ export const useSequenceStore = defineStore('sequencer', () => {
   const nextClipUrl = computed(() => (clips.items.length > 0 ? nextClip.value.url : null))
   const nextClipStartTime = computed(() => (clips.items.length > 0 ? nextClip.value.ss : null))
 
-  const videoRef = ref(null)
-
   const playNext = () => {
     if (playing.value) {
       let nextSequence = (currentSequence.value + 1) % clips.items.length
