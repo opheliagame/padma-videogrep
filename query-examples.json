@@ -1,0 +1,119 @@
+[
+  {
+    "keys": [
+      "title",
+      "clips",
+      "duration",
+      "editable",
+      "id",
+      "modified",
+      "posterRatio",
+      "videoRatio",
+      "streams",
+      "director",
+      "date"
+    ],
+    "query": {
+      "conditions": [
+        { "key": "transcripts", "value": "queryKeyword", "operator": "=" }
+      ],
+      "operator": "&"
+    },
+    "range": [10, 20],
+    "sort": [{ "key": "title", "operator": "+" }],
+    "clips": {
+      "query": {
+        "conditions": [
+          {
+            "key": "layer",
+            "operator": "&",
+            "value": [
+              "transcripts",
+              "keywords",
+              "places",
+              "events",
+              "descriptions"
+            ]
+          },
+          {
+            "conditions": [
+              {
+                "key": "transcripts",
+                "value": "queryKeyword",
+                "operator": "="
+              }
+            ],
+            "operator": "|"
+          }
+        ],
+        "operator": "&"
+      },
+      "items": 4,
+      "keys": []
+    }
+  },
+
+  {
+    "query": {
+      "conditions": [
+        { "key": "transcripts", "value": "queryKeyword", "operator": "=" }
+      ],
+      "operator": "&"
+    },
+    "clips": {
+      "query": {
+        "conditions": [
+          {
+            "key": "layer",
+            "operator": "&",
+            "value": [
+              "transcripts",
+              "keywords",
+              "places",
+              "events",
+              "descriptions"
+            ]
+          },
+          {
+            "conditions": [
+              {
+                "key": "transcripts",
+                "value": "queryKeyword",
+                "operator": "="
+              }
+            ],
+            "operator": "|"
+          }
+        ],
+        "operator": "&"
+      },
+      "items": 4,
+      "keys": []
+    }
+  },
+
+  {
+    "keys": [
+      "title",
+      "id",
+      "editable",
+      "modified",
+      "posterRatio",
+      "director",
+      "date",
+      "duration"
+    ],
+    "query": {
+      "conditions": [
+        { "key": "duration", "operator": "<", "value": "01:00:00" },
+        { "key": "transcripts", "operator": "=", "value": "queryKeyword" }
+      ],
+      "operator": "&"
+    },
+    "range": [0, 20],
+    "sort": [
+      { "key": "duration", "operator": "+" },
+      { "key": "title", "operator": "+" }
+    ]
+  }
+]
