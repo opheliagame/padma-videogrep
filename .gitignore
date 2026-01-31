@@ -1,1 +1,12 @@
+# OxJS build files
 /min
+/dev
+
+# OxJS source files
+source/*
+source/**/
+!source/UI/themes/
+# source/UI/themes/*
+# !source/**/funkypopgreen/
+
+/tools

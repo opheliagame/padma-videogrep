@@ -84,11 +84,12 @@ Ox.load(
           legacyThemes: { classic: "oxlight", modern: "oxdark" },
           currentIndex: 0,
           pages: [
+            { id: "about", title: "About" },
             { id: "readme", title: "Readme" },
             { id: "play", title: "Play" },
           ],
           user: {
-            item: { readme: "", play: "" },
+            item: { readme: "" },
             page: "",
             previousPage: "readme",
             theme: "oxlight",
@@ -738,6 +739,9 @@ Ox.load(
                   { id: "oxlight", title: "Light" },
                   { id: "oxmedium", title: "Medium" },
                   { id: "oxdark", title: "Dark" },
+                  // { id: "aqua", title: "Aqua" },
+                  { id: "funkypopgreen", title: "funkypopgreen" },
+                  { id: "resilientweave", title: "weave" },
                 ],
                 selectable: true,
                 value: app.user.theme,

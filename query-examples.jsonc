@@ -1,4 +1,6 @@
 [
+  // can have comments now!! because this is jsonc!
+
   {
     "keys": [
       "title",
