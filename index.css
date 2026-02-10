@@ -1,3 +1,46 @@
+/* Color Variables */
+:root {
+  /* Brand Colors */
+  --primary-blue: rgb(32, 64, 128);
+  --warm-paper: rgb(247, 240, 227);
+  --warm-paper-light: #fff4e1;
+
+  /* Neutrals - Grays */
+  --white: rgb(255, 255, 255);
+  --almost-white: rgb(250, 250, 250);
+  --light-gray-bg: rgb(245, 245, 245);
+  --light-gray-2: rgb(240, 240, 240);
+  --light-gray-3: var(--light-gray-3);
+  --border-gray: rgb(220, 220, 220);
+  --medium-gray: rgb(200, 200, 200);
+  --gray-text: rgb(180, 180, 180);
+  --gray-1: rgb(160, 160, 160);
+  --gray-2: rgb(144, 144, 144);
+  --gray-3: rgb(120, 120, 120);
+  --gray-4: rgb(96, 96, 96);
+  --gray-5: rgb(128, 128, 128);
+  --medium-dark-gray: rgb(150, 150, 150);
+  --dark-gray: rgb(32, 32, 32);
+  --black: rgb(0, 0, 0);
+  --almost-black: rgb(16, 16, 16);
+
+  /* Text Colors */
+  --text-dark: rgb(0, 10, 83);
+  --text-regular: rgb(64, 64, 64);
+  --text-light: rgb(180, 180, 180);
+
+  /* Accent Colors */
+  --cyan: rgb(140, 255, 205);
+  --cyan-dark: rgba(140, 255, 205, 0.8);
+  --cyan-light: rgba(140, 255, 205, 0.35);
+  --cyan-very-light: rgba(140, 255, 205, 0.15);
+  --yellow: rgb(255, 255, 0);
+
+  /* Interactive Colors */
+  --blue-highlight: rgb(220, 235, 250);
+  --dark-overlay: rgba(0, 0, 0, 0.9);
+}
+
 body {
   margin: 0;
   font-family:
@@ -9,44 +52,43 @@ body {
     sans-serif;
   letter-spacing: 0.2px;
   overflow: hidden;
+
+  background-color: var(--warm-paper);
+
+  font-family: "JetBrains Mono", monospace;
+}
+
+* {
+  background-color: var(--warm-paper);
 }
 
 /* Header Styles */
 .padmaHeader {
   height: 80px;
-  background: rgb(247, 240, 227);
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 0 40px;
-  box-sizing: border-box;
 }
 
 .headerLeft {
-  font-family: "JetBrains Mono", monospace;
-}
-
-.headerCenter {
-  font-family: "JetBrains Mono", monospace;
+  display: flex;
+  flex: 1;
+  gap: 1rem;
+  align-items: last baseline;
 }
 
 .headerRight {
   display: flex;
+  flex: 0;
   align-items: center;
-  justify-content: flex-end;
 }
 
 .headerModeButton {
   margin-left: 10px;
 }
 
-.padmaHeader .headerLeft,
-.padmaHeader .headerRight {
-  flex: 1;
-}
-
 .padmaHeader .headerCenter {
-  flex: 2;
   text-align: center;
 }
 
@@ -71,7 +113,6 @@ body {
 }
 
 .padmaHeader .headerModeButton {
-  background: rgb(255, 255, 255);
   border: 1px solid rgb(200, 200, 200);
   border-radius: 6px;
   color: rgb(64, 64, 64);
@@ -83,7 +124,6 @@ body {
 }
 
 .padmaHeader .headerModeButton:hover {
-  background: rgb(245, 245, 245);
   border-color: rgb(32, 64, 128);
   color: rgb(32, 64, 128);
 }
@@ -131,8 +171,6 @@ body {
 }
 
 .playClipMetadata {
-  color: var(--warm-paper, #fff4e1);
-  font-family: "JetBrains Mono", monospace;
   font-style: italic;
   font-weight: 300;
   font-size: 20px;
@@ -146,7 +184,6 @@ body {
   border-bottom: 1px solid rgb(200, 200, 200);
   cursor: pointer;
   color: black;
-  font-family: "JetBrains Mono", monospace;
   font-size: 20px;
   font-style: italic;
 }
@@ -216,12 +253,9 @@ body {
   border-left: 1px solid rgb(200, 200, 200);
   overflow-y: auto;
   padding: 10px;
-  font-family: "JetBrains Mono", monospace;
 }
 
 .playClipMetadata {
-  color: var(--warm-paper, #fff4e1);
-  font-family: "JetBrains Mono", monospace;
   font-style: italic;
   font-weight: 300;
   font-size: 20px;
@@ -235,7 +269,6 @@ body {
   border-bottom: 1px solid rgb(200, 200, 200);
   cursor: pointer;
   color: black;
-  font-family: "JetBrains Mono", monospace;
   font-size: 20px;
   font-style: italic;
 }
@@ -292,16 +325,8 @@ body {
 }
 
 /* Scene Container Styles */
-.sceneContainer {
-  transition: box-shadow 0.2s ease;
-}
-
-.sceneContainer:hover {
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-}
 
 .sceneHeader {
-  font-family: "JetBrains Mono", monospace;
   font-size: 16px;
   font-weight: 400;
   color: black;
@@ -309,13 +334,6 @@ body {
 }
 
 .sceneLabel {
-  font-family:
-    "Nunito",
-    "Varela Round",
-    system-ui,
-    -apple-system,
-    BlinkMacSystemFont,
-    sans-serif;
   font-size: 20px;
   font-style: italic;
   font-weight: 300;
@@ -323,7 +341,6 @@ body {
 }
 
 .sceneText {
-  font-family: "JetBrains Mono", monospace;
   font-size: 32px;
   font-weight: 300;
   font-style: italic;
@@ -338,7 +355,6 @@ body {
 }
 
 .playButton {
-  font-family: "JetBrains Mono", monospace;
   font-size: 32px;
   font-weight: 400;
   color: black;
@@ -350,17 +366,19 @@ body {
 
 /* Custom Scene Text Input */
 .sceneTextInput {
-  width: 100%;
   margin-top: 8px;
   margin-bottom: 20px;
   padding: 10px;
-  border: 1px solid rgb(200, 200, 200);
-  border-radius: 4px;
+  border: 1px solid transparent;
   font-size: 14px;
-  font-family: "JetBrains Mono", monospace;
-  background-color: white;
   box-sizing: border-box;
   line-height: 1.5;
+  width: 100%;
+  field-sizing: content;
+
+  /* overridden from theme */
+  background-image: none !important;
+  border: none !important;
 }
 
 .generateButton {
@@ -394,19 +412,13 @@ body {
 }
 
 /* Left Panel Styles */
-.OxSplitPanel > .OxElement:first-child {
-  background: rgb(250, 250, 250);
-}
 
 .OxSplitPanel > .writeLeftPanel,
 .writeLeftPanel {
-  background: var(--warm-paper, #fff4e1);
   display: flex;
   flex-direction: column;
   gap: 24px;
-  height: 832px;
   padding: 38px 42px;
-  width: 1280px;
 }
 
 .writeSceneList {
@@ -437,16 +449,16 @@ body {
 }
 
 /* Video List Panel Styles */
-.OxThemeOxlight .OxTableList {
+.OxThemePadmavideogrep .OxTableList {
   background: rgb(255, 255, 255);
 }
 
-.OxThemeOxlight .OxTableList .OxHead {
+.OxThemePadmavideogrep .OxTableList .OxHead {
   background: rgb(245, 245, 245);
   border-bottom: 1px solid rgb(220, 220, 220);
 }
 
-.OxThemeOxlight .OxTableList .OxBody .OxItem.OxSelected {
+.OxThemePadmavideogrep .OxTableList .OxBody .OxItem.OxSelected {
   background: rgb(220, 235, 250);
 }
 
@@ -475,9 +487,9 @@ body {
   background: rgba(140, 255, 205, 0.45);
 }
 
-.OxThemeOxlight .OxLabel.label,
-.OxThemeOxmedium .OxLabel.label,
-.OxThemeOxdark .OxLabel.label {
+.OxThemePadmavideogrep .OxLabel.label,
+.OxThemePadmavideogrep .OxLabel.label,
+.OxThemePadmavideogrep .OxLabel.label {
   border-color: transparent;
   background-color: transparent;
   box-shadow: none;
@@ -500,10 +512,10 @@ body {
 
   font-size: 13px;
   line-height: 20px;
-
+  /* 
   box-shadow:
     inset 0 0 0 1px rgba(140, 255, 205, 0.15),
-    0 8px 24px rgba(0, 0, 0, 0.25);
+    0 8px 24px rgba(0, 0, 0, 0.25); */
 }
 
 .page code,
@@ -555,68 +567,113 @@ body {
   padding: 12px;
 }
 
-body.OxThemeOxlight,
-.OxThemeOxlight .screen {
-  background-color: rgb(224, 224, 224);
+/*
+
+*/
+
+body.OxThemePadmavideogrep,
+.OxThemePadmavideogrep .screen {
+  background-color: var(--light-gray-3);
 }
 
-body.OxThemeOxmedium,
-.OxThemeOxmedium .screen {
+body.OxThemePadmavideogrep,
+.OxThemePadmavideogrep .screen {
   background-color: rgb(144, 144, 144);
 }
 
-body.OxThemeOxdark,
-.OxThemeOxdark .screen {
+body.OxThemePadmavideogrep,
+.OxThemePadmavideogrep .screen {
   background-color: rgb(16, 16, 16);
 }
 
-.OxThemeOxlight .OxComment .doclink,
-.OxThemeOxlight .page {
+.OxThemePadmavideogrep .OxComment .doclink,
+.OxThemePadmavideogrep .page {
   background-color: rgb(255, 255, 255);
 }
 
-.OxThemeOxmedium .OxComment .doclink,
-.OxThemeOxmedium .page {
+.OxThemePadmavideogrep .OxComment .doclink,
+.OxThemePadmavideogrep .page {
   background-color: rgb(160, 160, 160);
 }
 
-.OxThemeOxdark .OxComment .doclink,
-.OxThemeOxdark .page {
+.OxThemePadmavideogrep .OxComment .doclink,
+.OxThemePadmavideogrep .page {
   background-color: rgb(0, 0, 0);
 }
 
-.OxThemeOxlight .readme .item.selected {
-  background: rgb(224, 224, 224);
+.OxThemePadmavideogrep .readme .item.selected {
+  background: var(--light-gray-3);
 }
 
-.OxThemeOxmedium .readme .item.selected {
+.OxThemePadmavideogrep .readme .item.selected {
   background: rgb(128, 128, 128);
 }
 
-.OxThemeOxdark .readme .item.selected {
+.OxThemePadmavideogrep .readme .item.selected {
   background: rgb(32, 32, 32);
 }
 
-.OxThemeOxlight .OxComment .doclink,
-.OxThemeOxlight .logo,
-.OxThemeOxlight .page,
-.OxThemeOxlight .readme .OxSyntaxHighlighter {
+.OxThemePadmavideogrep .OxComment .doclink,
+.OxThemePadmavideogrep .logo,
+.OxThemePadmavideogrep .page,
+.OxThemePadmavideogrep .readme .OxSyntaxHighlighter {
   box-shadow: 0 0 0 1px rgb(160, 160, 160);
 }
 
-.OxThemeOxmedium .OxComment .doclink,
-.OxThemeOxmedium .logo,
-.OxThemeOxmedium .page,
-.OxThemeOxmedium .readme .OxSyntaxHighlighter {
+.OxThemePadmavideogrep .OxComment .doclink,
+.OxThemePadmavideogrep .logo,
+.OxThemePadmavideogrep .page,
+.OxThemePadmavideogrep .readme .OxSyntaxHighlighter {
   box-shadow: 0 0 0 1px rgb(128, 128, 128);
 }
 
-.OxThemeOxdark .OxComment .doclink {
+.OxThemePadmavideogrep .OxComment .doclink {
   box-shadow: 0 0 0 1px rgb(140, 255, 205);
 }
 
-.OxThemeOxdark .logo,
-.OxThemeOxdark .page,
-.OxThemeOxdark .readme .OxSyntaxHighlighter {
+.OxThemePadmavideogrep .logo,
+.OxThemePadmavideogrep .page,
+.OxThemePadmavideogrep .readme .OxSyntaxHighlighter {
   box-shadow: 0 0 0 1px rgb(96, 96, 96);
+}
+
+/* Padma VideoGrep Theme */
+body.OxThemePadmavideogrep,
+.OxThemePadmavideogrep .screen {
+  background-color: var(--warm-paper);
+}
+
+.OxThemePadmavideogrep .OxTableList {
+  background: rgb(255, 255, 255);
+}
+
+.OxThemePadmavideogrep .OxTableList .OxHead {
+  background: var(--warm-paper);
+  border-bottom: 1px solid rgba(32, 64, 128, 0.15);
+}
+
+.OxThemePadmavideogrep .OxTableList .OxBody .OxItem.OxSelected {
+  background: rgba(32, 64, 128, 0.08);
+}
+
+.OxThemePadmavideogrep .OxLabel.label {
+  border-color: transparent;
+  background-color: transparent;
+  box-shadow: none;
+}
+
+.OxThemePadmavideogrep .OxComment .doclink,
+.OxThemePadmavideogrep .page {
+  background-color: rgb(255, 255, 255);
+}
+
+.OxThemePadmavideogrep .readme .item.selected {
+  background: rgba(32, 64, 128, 0.08);
+}
+
+.OxThemePadmavideogrep .OxComment .doclink,
+.OxThemePadmavideogrep .logo,
+.OxThemePadmavideogrep .page,
+.OxThemePadmavideogrep .readme .OxSyntaxHighlighter {
+  box-shadow: 0 0 0 1px rgba(32, 64, 128, 0.2);
 }

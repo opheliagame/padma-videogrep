@@ -32,9 +32,7 @@ window.HeaderComponent = {
         : Ox.Element()
             .addClass("headerCenter")
             .html(
-              '<h1 class="headerTitle">' +
-                app.data.screenplay.name +
-                "</h1>",
+              '<h1 class="headerTitle">' + app.data.screenplay.name + "</h1>",
             );
 
     var $rightSection = Ox.Element().addClass("headerRight");
@@ -69,8 +67,8 @@ window.HeaderComponent = {
       })
       .appendTo($rightSection);
 
+    $leftSection.append($centerSection);
     $header.append($leftSection);
-    $header.append($centerSection);
     $header.append($rightSection);
 
     return $header;

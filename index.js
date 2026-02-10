@@ -32,7 +32,7 @@ Ox.load(function () {
     },
 
     init: function () {
-      Ox.load("UI", { theme: "oxlight" }, app.load);
+      Ox.load("UI", { theme: "padmavideogrep" }, app.load);
     },
 
     load: function (browserSupported) {
