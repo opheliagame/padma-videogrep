@@ -16,7 +16,7 @@ window.PlayPanelComponent = {
 
     $videoPlayerContainer.append($clipMetadata);
     $mainContainer.append($videoPlayerContainer);
-    $mainContainer.append($clipList);
+    // $mainContainer.append($clipList);
 
     return $mainContainer;
   },
