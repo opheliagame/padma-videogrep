@@ -20,10 +20,8 @@ Ox.load(function () {
           {
             name: "scene 1",
             grammars: [{ name: "water", operatorname: "and" }],
-          },
-          {
-            name: "scene 2",
-            grammars: [{ name: "bucket", operatorname: "and" }],
+            queryText: "water",
+            ast: null,
           },
         ],
       },
@@ -40,6 +38,15 @@ Ox.load(function () {
     load: function (browserSupported) {
       app.api = Ox.API({ url: API_URL }, function () {
         console.log("API initialized");
+
+        // Initialize scenes with parsed AST
+        if (
+          typeof SceneBuilderComponent !== "undefined" &&
+          SceneBuilderComponent.initializeScenes
+        ) {
+          SceneBuilderComponent.initializeScenes(app);
+        }
+
         app.$ui.appPanel = app.ui.appPanel().appendTo(Ox.$body);
         app.state.loaded = true;
       });

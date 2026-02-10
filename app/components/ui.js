@@ -40,33 +40,35 @@ window.UIComponents = {
     console.log("Total scenes to fetch:", scenes.length);
 
     scenes.forEach(function (scene, sceneIndex) {
-      var keywords = scene.grammars.map(function (g) {
-        return g.name;
-      });
-      var operator = scene.grammars.some(function (g) {
-        return g.operatorname === "or";
-      })
-        ? "|"
-        : "&";
+      console.log("Scene " + (sceneIndex + 1) + " query:", scene.queryText);
 
-      console.log(
-        "Fetching scene " + (sceneIndex + 1) + " with keywords:",
-        keywords,
-      );
+      // Use AST-based query if available
+      if (scene.ast) {
+        APIService.findClipsByAST(app, scene.ast, function (clips) {
+          allClips = allClips.concat(clips);
+          processedScenes++;
+          console.log(
+            "Scene " +
+              (sceneIndex + 1) +
+              " (AST) processed. Total scenes: " +
+              processedScenes +
+              "/" +
+              scenes.length,
+          );
 
-      APIService.findClipsByTranscript(app, keywords, operator, function (
-        clips,
-      ) {
-        allClips = allClips.concat(clips);
+          if (processedScenes === scenes.length) {
+            console.log("All clips fetched:", allClips);
+            if (allClips.length > 0) {
+              UIComponents.playClips(app, allClips);
+            } else {
+              console.warn("No clips found from any scene");
+            }
+          }
+        });
+      } else {
+        // Fallback for scenes without AST
+        console.warn("Scene " + (sceneIndex + 1) + " has no AST");
         processedScenes++;
-        console.log(
-          "Scene " +
-            (sceneIndex + 1) +
-            " processed. Total scenes: " +
-            processedScenes +
-            "/" +
-            scenes.length,
-        );
 
         if (processedScenes === scenes.length) {
           console.log("All clips fetched:", allClips);
@@ -76,7 +78,7 @@ window.UIComponents = {
             console.warn("No clips found from any scene");
           }
         }
-      });
+      }
     });
   },
 
