@@ -68,8 +68,10 @@ window.APIService = {
 
     var request = {
       keys: ["title", "annotations", "id", "in", "out", "videoRatio"],
-      range: [0, 100],
-      sort: [{ key: "title", operator: "+" }],
+      // TODO generativity parameters, length
+      range: [0, 10],
+      // TODO generativity parameters, sorting
+      // sort: [{ key: "title", operator: "+" }],
       query: {
         conditions: [
           {

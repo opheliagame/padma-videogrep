@@ -394,6 +394,7 @@ body {
 .sceneTextInput::placeholder {
   color: rgb(180, 180, 180);
   font-style: italic;
+  font-size: 13px;
 }
 
 /* Generate Button */

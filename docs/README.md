@@ -17,6 +17,7 @@ Complete documentation for the AST-aware query parser system and application arc
 ## Overview
 
 This project provides:
+
 - **Complex Boolean Queries**: AND/OR operators with proper precedence
 - **Abstract Syntax Tree (AST)**: Full AST generation and validation
 - **Build System**: Webpack bundling for browser compatibility
@@ -28,6 +29,7 @@ This project provides:
 ## Quick Start
 
 ### Building
+
 ```bash
 npm run build          # Build grammar and webpack bundle
 npm run build:parser  # Just compile grammar
@@ -35,12 +37,15 @@ npm run build:bundle  # Just webpack bundle
 ```
 
 ### Testing
+
 ```bash
 node app/api/service.test.js
 ```
 
 ### Browser Usage
+
 The parser is loaded automatically via `dist/nearley-bundle.js` in index.html:
+
 ```javascript
 // Parse a query
 const ast = window.nearleyParser.parse("water and bucket");
@@ -132,10 +137,12 @@ This order ensures all dependencies are available before use.
 #### API (`app/api/`)
 
 - **service.js**: Handles all API communication with Pad.ma
-  - `APIService.findByTranscript()` - Low-level API call wrapper
-  - `APIService.findClipsByTranscript()` - High-level clip fetching
   - `APIService.findClipsByAST()` - AST-based query execution
   - `astToQueryCondition()` - Converts AST to API query format
+
+  DEPRECATED
+  - `APIService.findByTranscript()` - Low-level API call wrapper
+  - `APIService.findClipsByTranscript()` - High-level clip fetching
 
 - **service.test.js**: Comprehensive test suite
   - Tests AST generation for various query types
@@ -181,18 +188,19 @@ This order ensures all dependencies are available before use.
 ### Key Global Objects
 
 ```javascript
-window.nearleyParser         // Parser from webpack bundle
-window.SceneParser           // Wrapper with parse() method
-window.APIService            // API communication
-window.HeaderComponent       // Header UI component
-window.SceneBuilderComponent // Scene editing component
-window.PlayPanelComponent    // Video player component
-window.UIComponents          // Main UI orchestrator
+window.nearleyParser; // Parser from webpack bundle
+window.SceneParser; // Wrapper with parse() method
+window.APIService; // API communication
+window.HeaderComponent; // Header UI component
+window.SceneBuilderComponent; // Scene editing component
+window.PlayPanelComponent; // Video player component
+window.UIComponents; // Main UI orchestrator
 ```
 
 ### Data Flow
 
 **Write Mode:**
+
 1. User edits scene textarea
 2. `sceneBuilder.js` detects change
 3. `SceneParser.parse()` processes text
@@ -200,6 +208,7 @@ window.UIComponents          // Main UI orchestrator
 5. Real-time preview updates
 
 **Play Mode:**
+
 1. Click "Play Mode" button
 2. Switch UI to play panel
 3. Click "Fetch Clips"
@@ -236,6 +245,7 @@ a and b or c
 ### AST Structure
 
 **Keyword Node:**
+
 ```javascript
 {
   type: "KEYWORD",
@@ -244,6 +254,7 @@ a and b or c
 ```
 
 **AND Operator:**
+
 ```javascript
 {
   type: "AND",
@@ -255,6 +266,7 @@ a and b or c
 ```
 
 **OR Operator:**
+
 ```javascript
 {
   type: "OR",
@@ -279,6 +291,7 @@ water AND bucket AND coffee
 ```
 
 NOT nested:
+
 ```
 {
   type: "AND",
@@ -325,21 +338,21 @@ function astToQueryCondition(node) {
     return {
       key: "transcripts",
       value: node.value,
-      operator: "="
+      operator: "=",
     };
   }
-  
+
   if (node.type === "AND") {
     return {
       conditions: node.operands.map(astToQueryCondition),
-      operator: "&"
+      operator: "&",
     };
   }
-  
+
   if (node.type === "OR") {
     return {
       conditions: node.operands.map(astToQueryCondition),
-      operator: "|"
+      operator: "|",
     };
   }
 }
@@ -351,7 +364,7 @@ function astToQueryCondition(node) {
 // In ui.js
 if (scene.ast) {
   // Use AST-based search
-  APIService.findClipsByAST(app, scene.ast, function(clips) {
+  APIService.findClipsByAST(app, scene.ast, function (clips) {
     // Handle results
   });
 } else {
@@ -365,6 +378,7 @@ if (scene.ast) {
 ## Examples
 
 ### Simple Query
+
 ```
 Input: water
 Output: { type: "KEYWORD", value: "water" }
@@ -372,6 +386,7 @@ API Condition: { key: "transcripts", value: "water", operator: "=" }
 ```
 
 ### AND Query
+
 ```
 Input: water and bucket
 Output: {
@@ -391,6 +406,7 @@ API Condition: {
 ```
 
 ### OR Query
+
 ```
 Input: water or rain
 Output: {
@@ -410,6 +426,7 @@ API Condition: {
 ```
 
 ### Complex with Parentheses
+
 ```
 Input: (water and bucket) or rain
 Output: {
@@ -441,6 +458,7 @@ API Condition: {
 ```
 
 ### Three+ Operators (Flattened)
+
 ```
 Input: water and bucket and coffee
 Output: {
@@ -469,6 +487,7 @@ All 6 tests passing:
 ```
 
 Run tests:
+
 ```bash
 node app/api/service.test.js
 ```
@@ -504,6 +523,7 @@ Edit `app/api/service.test.js` and add new test case:
 ```
 
 Then run:
+
 ```bash
 node app/api/service.test.js
 ```
@@ -511,6 +531,7 @@ node app/api/service.test.js
 ### Build System
 
 The webpack bundle combines:
+
 - Nearley.js parser library (19.6 KB)
 - moo lexer library (18.2 KB)
 - Compiled grammar rules (2.25 KB)
@@ -523,17 +544,22 @@ Result: **17.6 KB minified** for browser
 ## Troubleshooting
 
 ### Parser not loading
+
 Ensure `dist/nearley-bundle.js` is loaded before components use `window.nearleyParser`.
 
 ### Tests failing
+
 Run `npm run build` to recompile grammar and bundle:
+
 ```bash
 npm run build
 npm run test
 ```
 
 ### Grammar errors
+
 Update `app/utils/scene-query.ne` and rebuild:
+
 ```bash
 npm run build:parser
 npm run build:bundle
@@ -541,6 +567,7 @@ npm test
 ```
 
 ### AST not available on scene
+
 Ensure `SceneBuilderComponent.initializeScenes(app)` is called in `index.js` after parser loads.
 
 ---

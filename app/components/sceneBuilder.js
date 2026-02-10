@@ -27,49 +27,32 @@ window.SceneBuilderComponent = {
     var scenes = app.data.screenplay.scenes,
       $container = Ox.Element().addClass("writeSceneList");
 
-    scenes.forEach(function (scene, sceneIndex) {
+    // Helper function to create and bind a scene textarea
+    var createSceneElement = function (sceneObj, sceneIndex, $appendTo) {
       var $sceneContainer = Ox.Element()
         .addClass("sceneContainer")
-        .appendTo($container);
+        .appendTo($appendTo);
 
       var $sceneLabel = Ox.Element()
         .addClass("sceneLabel")
         .html("Scene " + (sceneIndex + 1))
         .appendTo($sceneContainer);
 
-      var sceneKeywords = scene.grammars
+      var sceneKeywords = sceneObj.grammars
         .map(function (g) {
           return g.name;
         })
         .join(" ");
 
-      // Parse initial query if not already parsed
-      if (!scene.ast && sceneKeywords) {
-        if (typeof window.SceneParser === "undefined") {
-          console.warn("SceneParser not available yet");
-        } else {
-          var parsed = window.SceneParser.parse(sceneKeywords);
-          scene.queryText = sceneKeywords;
-          scene.ast = parsed.ast;
-
-          console.log("Initial parse for scene " + (sceneIndex + 1) + ":", {
-            queryText: scene.queryText,
-            ast: scene.ast,
-            keywords: parsed.keywords,
-            operator: parsed.operator,
-            hasAST: parsed.ast !== null,
-          });
-        }
-      }
-
       // Create native textarea element
       var textarea = document.createElement("textarea");
       textarea.className = "sceneTextInput";
-      textarea.placeholder = "Enter keywords (space-separated)";
+      textarea.placeholder =
+        "Enter keywords (space-separated) • Enter to add scene";
       textarea.value = sceneKeywords;
 
-      // Bind change event directly to textarea
-      textarea.addEventListener("change", function () {
+      // Function to update scene from textarea
+      var updateSceneFromTextarea = function () {
         var updatedText = textarea.value;
 
         if (typeof window.SceneParser === "undefined") {
@@ -88,10 +71,10 @@ window.SceneBuilderComponent = {
         });
 
         // Store AST and queryText on the scene
-        scene.queryText = updatedText;
-        scene.ast = parsedScene.ast;
+        sceneObj.queryText = updatedText;
+        sceneObj.ast = parsedScene.ast;
 
-        scene.grammars = parsedScene.keywords.map(function (keyword, index) {
+        sceneObj.grammars = parsedScene.keywords.map(function (keyword, index) {
           return {
             name: keyword,
             operatorname:
@@ -101,14 +84,71 @@ window.SceneBuilderComponent = {
           };
         });
         console.log("Scene " + (sceneIndex + 1) + " updated:", {
-          queryText: scene.queryText,
-          hasAST: scene.ast !== null,
-          grammars: scene.grammars,
+          queryText: sceneObj.queryText,
+          hasAST: sceneObj.ast !== null,
+          grammars: sceneObj.grammars,
         });
+      };
+
+      // Bind change event
+      textarea.addEventListener("change", updateSceneFromTextarea);
+
+      // Bind Enter key (Ctrl+Enter) to create new scene
+      textarea.addEventListener("keydown", function (e) {
+        if (e.key === "Enter") {
+          e.preventDefault();
+
+          // Update current scene
+          updateSceneFromTextarea();
+
+          // Create new scene
+          var newScene = {
+            name: "scene " + (scenes.length + 1),
+            grammars: [],
+            queryText: "",
+            ast: null,
+          };
+
+          scenes.push(newScene);
+
+          // Add new scene UI
+          createSceneElement(newScene, scenes.length - 1, $container);
+
+          // Focus the new textarea (it's the last one added)
+          setTimeout(function () {
+            var allTextareas = document.querySelectorAll(".sceneTextInput");
+            if (allTextareas.length > 0) {
+              allTextareas[allTextareas.length - 1].focus();
+            }
+          }, 10);
+        }
       });
 
-      // Append textarea directly to container
+      // Append textarea to container
       $sceneContainer.append(textarea);
+    };
+
+    // Initialize all scenes
+    scenes.forEach(function (scene, sceneIndex) {
+      // Parse initial query if not already parsed
+      if (!scene.ast && scene.queryText) {
+        if (typeof window.SceneParser === "undefined") {
+          console.warn("SceneParser not available yet");
+        } else {
+          var parsed = window.SceneParser.parse(scene.queryText);
+          scene.ast = parsed.ast;
+
+          console.log("Initial parse for scene " + (sceneIndex + 1) + ":", {
+            queryText: scene.queryText,
+            ast: scene.ast,
+            keywords: parsed.keywords,
+            operator: parsed.operator,
+            hasAST: parsed.ast !== null,
+          });
+        }
+      }
+
+      createSceneElement(scene, sceneIndex, $container);
     });
 
     return $container;
