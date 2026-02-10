@@ -49,8 +49,10 @@ Ox.load(function () {
       app.state.mode = app.state.mode === "write" ? "play" : "write";
       console.log("Mode toggled to:", app.state.mode);
 
-      // Rebuild the main panel with the new mode
+      // Rebuild both header and main panel with the new mode
+      var $newHeader = app.ui.header();
       var $newMainPanel = app.ui.mainPanel();
+      app.$ui.appPanel.replaceElement(0, $newHeader);
       app.$ui.appPanel.replaceElement(1, $newMainPanel);
     },
 
@@ -162,10 +164,23 @@ Ox.load(function () {
           .bindEvent({
             click: function () {
               if (app.state.mode === "play") {
-                app.toggleMode();
-              } else {
+                // Already in play mode, just fetch and play clips
                 app.ui.fetchClips();
-                app.toggleMode();
+              } else {
+                // In write mode, toggle to play mode
+                app.state.mode = "play";
+                console.log("Mode toggled to:", app.state.mode);
+
+                // Rebuild UI
+                var $newHeader = app.ui.header();
+                var $newMainPanel = app.ui.mainPanel();
+                app.$ui.appPanel.replaceElement(0, $newHeader);
+                app.$ui.appPanel.replaceElement(1, $newMainPanel);
+
+                // After a small delay to allow DOM to settle, fetch clips
+                setTimeout(function () {
+                  app.ui.fetchClips();
+                }, 50);
               }
             },
           })
@@ -238,58 +253,72 @@ Ox.load(function () {
       },
 
       createPlayPanel: function () {
+        var $mainContainer = Ox.Element().addClass("playMainContainer");
         var $videoPlayerContainer = Ox.Element().addClass("playVideoContainer");
-
         var $clipMetadata = Ox.Element().addClass("playClipMetadata");
+        var $clipList = Ox.Element().addClass("playClipList");
 
         app.$ui.$playVideoContainer = $videoPlayerContainer;
         app.$ui.$clipMetadata = $clipMetadata;
-
-        $videoPlayerContainer.append($clipMetadata);
-
-        var $clipList = Ox.Element().addClass("playClipList");
-
         app.$ui.$clipList = $clipList;
 
-        return $videoPlayerContainer;
+        $videoPlayerContainer.append($clipMetadata);
+        $mainContainer.append($videoPlayerContainer);
+        $mainContainer.append($clipList);
+
+        return $mainContainer;
       },
 
       fetchClips: function () {
         console.log("Fetching clips...");
+        console.log("Current containers:", {
+          container: app.$ui.$playVideoContainer,
+          metadata: app.$ui.$clipMetadata,
+          list: app.$ui.$clipList,
+        });
 
-        var scenes = app.data.screenplay.scenes
-          .map(function (scene) {
-            return scene.grammars.map(function (g) {
-              return g.name;
-            });
-          })
-          .flat();
-
+        var scenes = app.data.screenplay.scenes;
         var allClips = [];
         var processedScenes = 0;
 
-        // scenes.forEach(function (scene, index) {
-        //   var operator = app.data.screenplay.scenes[index].grammars.some(
-        //     function (g) {
-        //       return g.operatorname === "or";
-        //     },
-        //   )
-        //     ? "|"
-        //     : "&";
-        // });
+        console.log("Total scenes to fetch:", scenes.length);
 
-        let tempOperator = "&";
+        scenes.forEach(function (scene, sceneIndex) {
+          var keywords = scene.grammars.map(function (g) {
+            return g.name;
+          });
+          var operator = scene.grammars.some(function (g) {
+            return g.operatorname === "or";
+          })
+            ? "|"
+            : "&";
 
-        console.log(`debug, ${scenes}`);
+          console.log(
+            "Fetching scene " + (sceneIndex + 1) + " with keywords:",
+            keywords,
+          );
 
-        app.findClipsByTranscript(scenes, tempOperator, function (clips) {
-          allClips = allClips.concat(clips);
-          processedScenes++;
+          app.findClipsByTranscript(keywords, operator, function (clips) {
+            allClips = allClips.concat(clips);
+            processedScenes++;
+            console.log(
+              "Scene " +
+                (sceneIndex + 1) +
+                " processed. Total scenes: " +
+                processedScenes +
+                "/" +
+                scenes.length,
+            );
 
-          if (processedScenes === scenes.length) {
-            console.log("All clips fetched:", allClips);
-            app.playClips(allClips);
-          }
+            if (processedScenes === scenes.length) {
+              console.log("All clips fetched:", allClips);
+              if (allClips.length > 0) {
+                app.playClips(allClips);
+              } else {
+                console.warn("No clips found from any scene");
+              }
+            }
+          });
         });
       },
     },
@@ -376,6 +405,11 @@ Ox.load(function () {
     },
 
     playClips: function (items) {
+      if (!items || items.length === 0) {
+        console.error("No items to play");
+        return;
+      }
+
       if (app.data.currentIndex >= items.length) {
         console.log("All clips played");
         app.data.currentIndex = 0;
@@ -385,23 +419,23 @@ Ox.load(function () {
       console.log("Playing clip " + (app.data.currentIndex + 1));
       var clip = items[app.data.currentIndex];
 
-      // Clear previous video
-      if (app.$ui.$playVideoContainer) {
-        app.$ui.$playVideoContainer.find("video").remove();
-        app.$ui.$playVideoContainer.find(".OxVideoPlayer").remove();
+      // Ensure containers exist
+      if (!app.$ui.$playVideoContainer) {
+        console.error("Play video container not found");
+        return;
       }
+
+      // Clear previous video
+      app.$ui.$playVideoContainer.find("video").remove();
+      app.$ui.$playVideoContainer.find(".OxVideoPlayer").remove();
 
       // Update clip list highlighting
       if (app.$ui.$clipList) {
         app.renderClipList(items);
       }
 
-      var containerWidth = app.$ui.$playVideoContainer
-        ? app.$ui.$playVideoContainer.width()
-        : Ox.$window.width() - 280;
-      var containerHeight = app.$ui.$playVideoContainer
-        ? app.$ui.$playVideoContainer.height()
-        : Ox.$window.height() - 80;
+      var containerWidth = app.$ui.$playVideoContainer.width();
+      var containerHeight = app.$ui.$playVideoContainer.height();
 
       var videoWidth = containerWidth;
       var videoHeight = videoWidth / clip.videoAspectRatio;
