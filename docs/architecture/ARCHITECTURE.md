@@ -49,8 +49,12 @@ padma-videogrep-oxjs/
 - **header.js**: Application header with title and mode toggle button
   - `HeaderComponent.create(app)` - Creates and returns header element
 
-- **sceneBuilder.js**: Scene input interface for write mode
-  - `SceneBuilderComponent.create(app)` - Builds list of scene inputs
+- **sceneBuilder.js**: Scene input interface for write mode (editable textarea)
+  - `SceneBuilderComponent.create(app)` - Creates native textarea inputs for each scene
+  - Wraps textarea elements with Ox.Element for event binding
+  - Parses user input to extract keywords and operators
+  - Updates scene data model in real-time when textarea changes
+  - Supports space-separated keywords with AND/OR operators
 
 - **playPanel.js**: Video player container and clip list for play mode
   - `PlayPanelComponent.create(app)` - Creates video + clip list layout
@@ -94,12 +98,27 @@ This ensures all dependencies are available before use.
 4. Add script tag to `index.html` before `index.js`
 5. Use in `ui.js` or other components
 
+## Write Mode - Scene Editing
+
+In write mode, users can edit scenes using editable textarea inputs:
+
+1. Each scene has its own textarea with space-separated keywords
+2. Keywords can be combined with AND/OR operators
+3. Changes update the scene data model in real-time
+4. When clicking "play mode", the scenes are fetched from the API
+5. The parser automatically detects OR operators to set the search operator
+
+**Example inputs:**
+- `water bucket` - Searches for clips containing both "water" AND "bucket"
+- `water or bucket` - Searches for clips containing either "water" OR "bucket"
+- Multiple keywords work with the default AND logic
+
 ## Key Global Objects
 
 - `window.SceneParser` - Text parsing utilities
 - `window.APIService` - API calls
 - `window.HeaderComponent` - Header component
-- `window.SceneBuilderComponent` - Scene builder component
+- `window.SceneBuilderComponent` - Scene builder component (creates editable textareas)
 - `window.PlayPanelComponent` - Play panel component
 - `window.UIComponents` - UI orchestrator
 - `window.oxjs` or `app` - Main application instance

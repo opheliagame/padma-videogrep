@@ -18,33 +18,36 @@ window.SceneBuilderComponent = {
         .html("Scene " + (sceneIndex + 1))
         .appendTo($sceneContainer);
 
-      var $sceneTextInput = Ox.Element()
-        .addClass("sceneTextInput")
-        .options({
-          value: scene.grammars
-            .map(function (g) {
-              return g.name;
-            })
-            .join(" "),
+      var sceneKeywords = scene.grammars
+        .map(function (g) {
+          return g.name;
         })
-        .bindEvent({
-          input: function () {
-            var updatedText = $sceneTextInput.options("value");
-            var parsedScene = SceneParser.parse(updatedText);
-            scene.grammars = parsedScene.keywords.map(function (keyword, index) {
-              return {
-                name: keyword,
-                operatorname:
-                  index < parsedScene.keywords.length - 1
-                    ? parsedScene.operator
-                    : "",
-              };
-            });
-          },
-        })
-        .appendTo($sceneContainer);
+        .join(" ");
 
-      $sceneTextInput.html($sceneTextInput.options("value"));
+      // Create native textarea element
+      var textarea = document.createElement("textarea");
+      textarea.className = "sceneTextInput";
+      textarea.placeholder = "Enter keywords (space-separated)";
+      textarea.value = sceneKeywords;
+
+      // Bind change event directly to textarea
+      textarea.addEventListener("change", function () {
+        var updatedText = textarea.value;
+        var parsedScene = SceneParser.parse(updatedText);
+        scene.grammars = parsedScene.keywords.map(function (keyword, index) {
+          return {
+            name: keyword,
+            operatorname:
+              index < parsedScene.keywords.length - 1
+                ? parsedScene.operator
+                : "",
+          };
+        });
+        console.log("Scene " + (sceneIndex + 1) + " updated:", scene.grammars);
+      });
+
+      // Append textarea directly to container
+      $sceneContainer.append(textarea);
     });
 
     return $container;

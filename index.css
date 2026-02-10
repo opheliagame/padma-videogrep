@@ -351,12 +351,16 @@ body {
 /* Custom Scene Text Input */
 .sceneTextInput {
   width: 100%;
-  margin-bottom: 12px;
-  padding: 8px;
+  margin-top: 8px;
+  margin-bottom: 20px;
+  padding: 10px;
   border: 1px solid rgb(200, 200, 200);
   border-radius: 4px;
   font-size: 14px;
-  font-family: "Nunito", "Varela Round", system-ui, sans-serif;
+  font-family: "JetBrains Mono", monospace;
+  background-color: white;
+  box-sizing: border-box;
+  line-height: 1.5;
 }
 
 .generateButton {
@@ -365,8 +369,8 @@ body {
 
 .sceneTextInput:focus {
   outline: none;
-  border-bottom-color: rgb(32, 64, 128);
-  box-shadow: none;
+  border-color: rgb(32, 64, 128);
+  box-shadow: 0 0 0 2px rgba(32, 64, 128, 0.1);
 }
 
 .sceneTextInput::placeholder {
