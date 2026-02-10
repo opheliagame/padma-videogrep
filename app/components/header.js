@@ -38,27 +38,28 @@ window.HeaderComponent = {
     var $rightSection = Ox.Element().addClass("headerRight");
 
     var $modeButton = Ox.Button({
-      title: app.state.mode === "play" ? "Fetch Clips" : "play mode",
-      width: 120,
+      title: app.state.mode === "play" ? "Write" : "Play",
+      width: 100,
     })
       .addClass("headerModeButton playButton")
       .bindEvent({
         click: function () {
+          // Toggle between modes
+          app.state.mode = app.state.mode === "play" ? "write" : "play";
+          console.log("Mode toggled to:", app.state.mode);
+
+          // Update URL
+          var newPath = window.location.pathname + "#" + app.state.mode;
+          window.history.pushState({ mode: app.state.mode }, "", newPath);
+
+          // Rebuild UI
+          var $newHeader = HeaderComponent.create(app);
+          var $newMainPanel = UIComponents.mainPanel(app);
+          app.$ui.appPanel.replaceElement(0, $newHeader);
+          app.$ui.appPanel.replaceElement(1, $newMainPanel);
+
+          // If switching to play mode, fetch clips
           if (app.state.mode === "play") {
-            // Already in play mode, just fetch and play clips
-            UIComponents.fetchClips(app);
-          } else {
-            // In write mode, toggle to play mode
-            app.state.mode = "play";
-            console.log("Mode toggled to:", app.state.mode);
-
-            // Rebuild UI
-            var $newHeader = HeaderComponent.create(app);
-            var $newMainPanel = UIComponents.mainPanel(app);
-            app.$ui.appPanel.replaceElement(0, $newHeader);
-            app.$ui.appPanel.replaceElement(1, $newMainPanel);
-
-            // After a small delay to allow DOM to settle, fetch clips
             setTimeout(function () {
               UIComponents.fetchClips(app);
             }, 50);
