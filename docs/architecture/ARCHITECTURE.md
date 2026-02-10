@@ -4,34 +4,48 @@
 
 ```
 padma-videogrep-oxjs/
-├── index.html              # Entry point
-├── index.css               # Global styles
+├── index.html              # Entry point (loads all modules)
 ├── index.js                # Main application logic
-├── api/
-│   └── service.js          # API calls to pad.ma
-├── components/
-│   ├── header.js           # Header component
-│   ├── sceneBuilder.js     # Scene input component
-│   ├── playPanel.js        # Video player and clip list
-│   └── ui.js               # Main UI orchestrator
-├── utils/
-│   └── parser.js           # Scene text parser
-└── min/
-    └── Ox.js               # OxJS framework
+├── index.css               # Global styles
+├── app/                    # Application code
+│   ├── api/
+│   │   └── service.js      # API calls to pad.ma
+│   ├── components/
+│   │   ├── header.js       # Header component
+│   │   ├── sceneBuilder.js # Scene input component
+│   │   ├── playPanel.js    # Video player and clip list
+│   │   └── ui.js           # Main UI orchestrator
+│   ├── domain/             # Domain logic (future)
+│   └── utils/
+│       └── parser.js       # Scene text parser
+├── docs/
+│   └── architecture/
+│       └── ARCHITECTURE.md # This file
+├── min/
+│   └── Ox.js               # OxJS framework (minified)
+├── dev/                    # Development framework files
+├── source/                 # Source framework files
+├── tools/                  # Build and utility tools
+├── play/                   # Play mode demo files
+├── readme/                 # Documentation pages
+└── bkp/                    # Backup files
 ```
 
 ## Module Descriptions
 
-### Utils (`utils/`)
+### Utils (`app/utils/`)
+
 - **parser.js**: Parses scene text to extract keywords and operators (AND/OR)
   - `SceneParser.parse(sceneText)` - Returns keywords and operator structure
 
-### API (`api/`)
+### API (`app/api/`)
+
 - **service.js**: Handles all API communication with pad.ma
   - `APIService.findByTranscript()` - Low-level API call wrapper
   - `APIService.findClipsByTranscript()` - High-level clip fetching with data transformation
 
-### Components (`components/`)
+### Components (`app/components/`)
+
 - **header.js**: Application header with title and mode toggle button
   - `HeaderComponent.create(app)` - Creates and returns header element
 
@@ -48,9 +62,22 @@ padma-videogrep-oxjs/
   - `UIComponents.playClips(app, items)` - Plays video clips sequentially
 
 ### Core Files
-- **index.html**: Loads all scripts in dependency order
-- **index.js**: Main app initialization and state management
-- **index.css**: Global styles for all components
+
+- **index.html**: Loads all scripts in dependency order (located in root)
+- **index.js**: Main app initialization and state management (located in root)
+- **index.css**: Global styles for all components (located in root)
+
+## Script Loading Order
+
+As defined in `index.html`, scripts are loaded in this order:
+
+1. OxJS framework (`min/Ox.js`)
+2. Utilities (`app/utils/parser.js`)
+3. API service (`app/api/service.js`)
+4. Components (`app/components/header.js`, etc.)
+5. Main app (`index.js`)
+
+This ensures all dependencies are available before use.
 
 ## Data Flow
 
@@ -61,7 +88,7 @@ padma-videogrep-oxjs/
 
 ## Adding New Components
 
-1. Create new file in `components/` folder
+1. Create new file in `app/components/` folder
 2. Define component with namespace (e.g., `MyComponent`)
 3. Create methods following pattern: `MyComponent.create(app)`, etc.
 4. Add script tag to `index.html` before `index.js`
