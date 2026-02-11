@@ -13,12 +13,7 @@ window.UIComponents = {
   leftPanel: function (app) {
     var $sceneBuilder = SceneBuilderComponent.create(app);
 
-    return Ox.Element()
-      .addClass("writeLeftPanel")
-      .append(
-        Ox.Element().addClass("sceneHeader").html("Scenes"),
-        $sceneBuilder,
-      );
+    return Ox.Element().addClass("writeLeftPanel").append($sceneBuilder);
   },
 
   playPanel: function (app) {
@@ -151,14 +146,25 @@ window.UIComponents = {
 
     // Update metadata
     if (app.$ui.$clipMetadata) {
-      app.$ui.$clipMetadata.html(
-        "<div>" +
-          clip.title +
-          "</div>" +
-          '<div style="font-size: 12px; margin-top: 4px;">' +
-          new Date().toISOString().split("T")[0].replace(/-/g, "/") +
-          "</div>",
-      );
+      var metadata = Ox.Element().addClass("playClipMetadata");
+
+      var textDiv = Ox.Element()
+        .addClass("metadata-text")
+        .html(clip.title || "")
+        .appendTo(metadata);
+
+      var infoDiv = Ox.Element()
+        .addClass("metadata-info")
+        .html(
+          (clip.source ? clip.source : "Interview") +
+            "<br/>" +
+            (clip.date
+              ? clip.date
+              : new Date().toISOString().split("T")[0].replace(/-/g, "/")),
+        )
+        .appendTo(metadata);
+
+      app.$ui.$clipMetadata.empty().append(metadata);
     }
 
     video.playInToOut();

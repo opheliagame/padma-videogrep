@@ -7,6 +7,11 @@ window.HeaderComponent = {
   create: function (app) {
     var $header = Ox.Element().addClass("padmaHeader");
 
+    // Add playmode class if in play mode
+    if (app.state.mode === "play") {
+      $header.addClass("playmode");
+    }
+
     var $leftSection =
       app.state.mode === "play" && app.state.currentScene
         ? Ox.Element()
