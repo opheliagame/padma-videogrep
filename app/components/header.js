@@ -108,13 +108,11 @@ window.HeaderComponent = {
 
     var $rightSection = Ox.Element().addClass("headerRight");
 
-    var $modeButton = Ox.Button({
-      title: app.state.mode === "play" ? "Write" : "Play",
-      width: 100,
-    })
+    var $modeButton = Ox.Element()
       .addClass("headerModeButton playButton")
+      .html(app.state.mode === "play" ? "Write" : "Play")
       .bindEvent({
-        click: function () {
+        anyclick: function () {
           // Toggle between modes
           app.state.mode = app.state.mode === "play" ? "write" : "play";
           console.log("Mode toggled to:", app.state.mode);

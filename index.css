@@ -26,6 +26,8 @@
 
   /* Text Colors */
   --text-dark: rgb(0, 10, 83);
+  --ink: rgb(0, 10, 83);
+  --ink-light: rgba(0, 10, 83, 0.8);
   --text-regular: rgb(64, 64, 64);
   --text-light: rgb(180, 180, 180);
 
@@ -58,17 +60,20 @@ body {
   font-family: "JetBrains Mono", monospace;
 }
 
+html,
+body,
 * {
+  box-sizing: border-box;
   background-color: var(--warm-paper);
 }
 
 /* Header Styles */
 .padmaHeader {
-  height: 80px;
+  height: 60px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 40px;
+  padding: 0 24px;
 }
 
 .padmaHeader.playmode {
@@ -82,14 +87,10 @@ body {
   align-items: last baseline;
 }
 
-.headerRight {
-  display: flex;
-  flex: 0;
-  align-items: center;
-}
-
 .headerModeButton {
-  margin-left: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .padmaHeader .headerCenter {
@@ -97,23 +98,14 @@ body {
 }
 
 .padmaHeader .headerBrand {
-  font-size: 14px;
+  font-size: small;
   font-weight: 400;
   color: rgb(64, 64, 64);
   letter-spacing: 0.3px;
 }
 
-.padmaHeader .headerTitle {
-  margin: 0;
-  font-size: 42px;
-  font-weight: 300;
-  color: rgb(32, 64, 128);
-  letter-spacing: 0.5px;
-  line-height: 1.2;
-}
-
 .padmaHeader.playmode .headerTitle {
-  color: rgba(200, 200, 200, 0.8);
+  color: var(--warm-paper);
 }
 
 .headerTitleEditable {
@@ -121,11 +113,9 @@ body {
 }
 
 .headerTitleDisplay {
-  font-size: 42px;
+  font-size: xx-large;
   font-weight: 300;
-  color: rgb(32, 64, 128);
-  letter-spacing: 0.5px;
-  line-height: 1.2;
+  color: var(--ink);
   cursor: pointer;
   transition: opacity 0.2s ease;
   padding: 0 8px;
@@ -136,17 +126,6 @@ body {
 }
 
 .headerTitleInput {
-  display: none;
-  font-size: 42px;
-  font-weight: 300;
-  color: rgb(32, 64, 128);
-  letter-spacing: 0.5px;
-  line-height: 1.2;
-  border: 2px solid rgb(32, 64, 128);
-  border-radius: 4px;
-  padding: 4px 8px;
-  font-family: inherit;
-  max-width: 500px;
 }
 
 .padmaHeader .headerRight {
@@ -154,38 +133,10 @@ body {
 }
 
 .padmaHeader .headerModeButton {
-  border: 1px solid rgb(200, 200, 200);
-  border-radius: 6px;
-  color: rgb(64, 64, 64);
-  font-size: 14px;
-  font-weight: 500;
-  padding: 8px 16px;
+  color: var(--ink);
+  font-size: medium;
   cursor: pointer;
   transition: all 0.2s ease;
-}
-
-.padmaHeader.playmode .headerModeButton {
-  border-color: rgba(200, 200, 200, 0.5);
-  color: rgba(200, 200, 200, 0.7);
-}
-
-.padmaHeader .headerModeButton:hover {
-  border-color: rgb(32, 64, 128);
-  color: rgb(32, 64, 128);
-}
-
-.padmaHeader.playmode .headerModeButton:hover {
-  border-color: rgba(200, 200, 200, 0.8);
-  color: rgba(200, 200, 200, 0.9);
-}
-
-.padmaHeader .headerModeButton .OxButton {
-  height: 32px !important;
-  line-height: 32px;
-  padding: 0 16px;
-  font-size: 14px;
-  font-weight: 500;
-  border-radius: 6px;
 }
 
 .padmaHeader .headerLink {
@@ -362,6 +313,15 @@ body {
   /* border-radius: 4px; */
 }
 
+/* Write Mode */
+
+.sceneLabel {
+  font-size: medium;
+  font-style: italic;
+  font-weight: 300;
+  color: var(--ink-light);
+}
+
 /* Scene Container Styles */
 
 .sceneHeader {
@@ -371,18 +331,10 @@ body {
   margin-bottom: 24px;
 }
 
-.sceneLabel {
-  font-size: 20px;
-  font-style: italic;
-  font-weight: 300;
-  color: var(--ink-2, rgba(0, 10, 83, 0.8));
-}
-
 .sceneText {
-  font-size: 32px;
-  font-weight: 300;
-  font-style: italic;
-  color: var(--ink, #000a53);
+  font-size: large;
+  font-weight: bold;
+  color: var(--ink);
   display: inline;
   margin-right: 16px;
 }
@@ -404,12 +356,9 @@ body {
 
 /* Custom Scene Text Input */
 .sceneTextInput {
-  margin-top: 8px;
-  margin-bottom: 20px;
   padding: 10px;
   border: 1px solid transparent;
   font-size: 14px;
-  box-sizing: border-box;
   line-height: 1.5;
   width: 100%;
   field-sizing: content;
@@ -417,6 +366,11 @@ body {
   /* overridden from theme */
   background-image: none !important;
   border: none !important;
+  color: var(--ink) !important;
+
+  font-size: large;
+  font-weight: 600;
+  display: inline;
 }
 
 .generateButton {
@@ -461,22 +415,17 @@ body {
 }
 
 .writeSceneList {
-  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
 }
 
-.writeScene {
-  box-shadow: none;
-}
-
-.writeScene:hover {
-  box-shadow: none;
-}
-
-.writeScene .sceneLabel {
-  font-size: 14px;
-  font-style: italic;
-  color: rgb(120, 120, 120);
-  letter-spacing: 0.3px;
+.sceneContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
 }
 
 .writePanelPlaceholder {
