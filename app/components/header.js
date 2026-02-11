@@ -34,11 +34,73 @@ window.HeaderComponent = {
                 app.state.currentScene.query +
                 "</h1>",
             )
-        : Ox.Element()
-            .addClass("headerCenter")
-            .html(
-              '<h1 class="headerTitle">' + app.data.screenplay.name + "</h1>",
-            );
+        : Ox.Element().addClass("headerCenter headerTitleEditable");
+
+    // Create or reuse editable title elements
+    if (!app.$ui.titleDisplay) {
+      var $titleDisplay = Ox.Element()
+        .addClass("headerTitleDisplay")
+        .html(app.data.screenplay.name);
+
+      var $titleInput = Ox.Input({
+        value: app.data.screenplay.name,
+      })
+        .addClass("headerTitleInput")
+        .hide();
+
+      // Save on blur or Enter
+      var saveTitle = function () {
+        var newName = $titleInput.value().trim();
+        if (newName && newName !== app.data.screenplay.name) {
+          app.data.screenplay.name = newName;
+          $titleDisplay.html(newName);
+        }
+        app.state.editingTitle = false;
+        $titleInput.hide();
+        $titleDisplay.show();
+      };
+
+      // Bind events once during creation
+      $titleDisplay.bindEvent({
+        anyclick: function () {
+          if (app.state.mode === "play") return;
+          app.state.editingTitle = true;
+          $titleDisplay.hide();
+          $titleInput.show();
+          $titleInput.focusInput();
+        },
+      });
+
+      $titleInput.bindEvent({
+        blur: saveTitle,
+        submit: function () {
+          saveTitle();
+          app.state.editingTitle = false;
+          $titleInput.hide();
+          $titleDisplay.show();
+        },
+      });
+
+      app.$ui.titleDisplay = $titleDisplay;
+      app.$ui.titleInput = $titleInput;
+    } else {
+      // Update value in case screenplay name changed externally
+      app.$ui.titleDisplay.html(app.data.screenplay.name);
+      app.$ui.titleInput.value(app.data.screenplay.name);
+    }
+
+    // Show/hide based on mode and conditionally append
+    if (app.state.mode !== "play" || !app.state.currentScene) {
+      // Only append if not already a child
+      if (!app.$ui.titleDisplay.$element.parentNode) {
+        $centerSection.append(app.$ui.titleDisplay);
+        $centerSection.append(app.$ui.titleInput);
+      }
+      app.$ui.titleDisplay.show();
+    } else {
+      app.$ui.titleDisplay.hide();
+      app.$ui.titleInput.hide();
+    }
 
     var $rightSection = Ox.Element().addClass("headerRight");
 
