@@ -25,6 +25,7 @@ Ox.load(function () {
           },
         ],
       },
+      generativity: {},
     },
     state: {
       loaded: false,

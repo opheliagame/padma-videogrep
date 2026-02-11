@@ -140,10 +140,6 @@ This order ensures all dependencies are available before use.
   - `APIService.findClipsByAST()` - AST-based query execution
   - `astToQueryCondition()` - Converts AST to API query format
 
-  DEPRECATED
-  - `APIService.findByTranscript()` - Low-level API call wrapper
-  - `APIService.findClipsByTranscript()` - High-level clip fetching
-
 - **service.test.js**: Comprehensive test suite
   - Tests AST generation for various query types
   - Validates operator precedence

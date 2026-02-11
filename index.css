@@ -665,3 +665,73 @@ body.OxThemePadmavideogrep,
 .OxThemePadmavideogrep .readme .OxSyntaxHighlighter {
   box-shadow: 0 0 0 1px rgba(32, 64, 128, 0.2);
 }
+/* Generativity Controls */
+.generativityControls {
+  padding: 12px;
+  border-top: 1px solid var(--border-gray);
+  border-left: 1px solid var(--border-gray);
+}
+
+.generativityTitle {
+  font-size: medium;
+  color: var(--text-dark);
+  text-transform: italic;
+  margin-bottom: 12px;
+  letter-spacing: 0.3px;
+}
+
+.controlGroup {
+  margin-bottom: 16px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--almost-black);
+}
+
+.controlLabel {
+  font-size: small;
+  color: var(--gray-text);
+  margin-bottom: 12px;
+  display: block;
+}
+
+.lengthOptions {
+  display: flex;
+  gap: 8px;
+  justify-content: space-between;
+}
+
+.lengthOption {
+  flex: 1;
+  text-align: center;
+  font-size: medium;
+  font-style: italic;
+  color: var(--text-light);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border-radius: 2px;
+}
+
+.lengthOption:hover {
+  color: var(--text-dark);
+}
+
+.lengthOption.active {
+  color: var(--ink);
+  font-weight: bold;
+  font-style: normal;
+}
+
+.sortSelect {
+  width: 100%;
+}
+
+.limitInput {
+  width: 100%;
+}
+
+.durationInfo {
+  font-size: 10px;
+  color: var(--gray-text);
+  text-align: center;
+  margin-top: 8px;
+  font-style: italic;
+}

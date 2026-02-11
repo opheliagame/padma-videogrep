@@ -12,8 +12,22 @@ window.UIComponents = {
 
   leftPanel: function (app) {
     var $sceneBuilder = SceneBuilderComponent.create(app);
+    var $generativityControls = GenerativityControlsComponent.create(app);
 
-    return Ox.Element().addClass("writeLeftPanel").append($sceneBuilder);
+    var $splitPanel = Ox.SplitPanel({
+      elements: [
+        {
+          element: $sceneBuilder,
+        },
+        {
+          element: $generativityControls,
+          size: 220,
+        },
+      ],
+      orientation: "horizontal",
+    }).addClass("writeLeftPanel");
+
+    return $splitPanel;
   },
 
   playPanel: function (app) {
