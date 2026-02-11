@@ -54,6 +54,10 @@ window.HeaderComponent = {
         if (newName && newName !== app.data.screenplay.name) {
           app.data.screenplay.name = newName;
           $titleDisplay.html(newName);
+          // Trigger save to IndexedDB
+          if (typeof StorageManager !== "undefined") {
+            StorageManager.save(app);
+          }
         }
         app.state.editingTitle = false;
         $titleInput.hide();

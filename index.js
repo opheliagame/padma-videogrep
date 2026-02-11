@@ -19,7 +19,7 @@ Ox.load(function () {
         scenes: [
           {
             name: "scene 1",
-            grammars: [{ name: "water", operatorname: "and" }],
+            grammars: [{ name: "water", operatorname: "&" }],
             queryText: "water",
             ast: null,
           },
@@ -32,7 +32,21 @@ Ox.load(function () {
     },
 
     init: function () {
-      Ox.load("UI", { theme: "padmavideogrep" }, app.load);
+      // Initialize storage and load saved data
+      StorageManager.init(function (dbReady) {
+        if (dbReady) {
+          StorageManager.load(function (savedData) {
+            if (savedData) {
+              // Restore saved state and data
+              app.state = Object.assign(app.state, savedData.state);
+              app.data = Object.assign(app.data, savedData.data);
+              console.log("App state restored from IndexedDB");
+            }
+          });
+        }
+
+        Ox.load("UI", { theme: "padmavideogrep" }, app.load);
+      });
     },
 
     load: function (browserSupported) {
@@ -49,7 +63,27 @@ Ox.load(function () {
 
         app.$ui.appPanel = app.ui.appPanel().appendTo(Ox.$body);
         app.state.loaded = true;
+
+        // Set up auto-save on state/data changes
+        app.setupAutoSave();
       });
+    },
+
+    setupAutoSave: function () {
+      // Debounce save to avoid too frequent writes
+      var saveTimeout;
+      var originalDataProxy = app.data;
+
+      // Create a function to handle saves
+      var triggerSave = function () {
+        clearTimeout(saveTimeout);
+        saveTimeout = setTimeout(function () {
+          StorageManager.save(app);
+        }, 1000); // Save after 1 second of no changes
+      };
+
+      // Override data assignment to trigger saves
+      window.addEventListener("change", triggerSave);
     },
 
     toggleMode: function () {

@@ -38,18 +38,12 @@ window.SceneBuilderComponent = {
         .html("Scene " + (sceneIndex + 1))
         .appendTo($sceneContainer);
 
-      var sceneKeywords = sceneObj.grammars
-        .map(function (g) {
-          return g.name;
-        })
-        .join(" ");
-
       // Create native textarea element
       var textarea = document.createElement("textarea");
       textarea.className = "sceneTextInput";
       textarea.placeholder =
         "Enter keywords (space-separated) • Enter to add scene";
-      textarea.value = sceneKeywords;
+      textarea.value = sceneObj.queryText;
 
       // Function to update scene from textarea
       var updateSceneFromTextarea = function () {
@@ -91,7 +85,13 @@ window.SceneBuilderComponent = {
       };
 
       // Bind change event
-      textarea.addEventListener("change", updateSceneFromTextarea);
+      textarea.addEventListener("change", function () {
+        updateSceneFromTextarea();
+        // Trigger save to IndexedDB
+        if (typeof StorageManager !== "undefined") {
+          StorageManager.save(app);
+        }
+      });
 
       // Bind Enter key (Ctrl+Enter) to create new scene
       textarea.addEventListener("keydown", function (e) {
@@ -113,6 +113,11 @@ window.SceneBuilderComponent = {
 
           // Add new scene UI
           createSceneElement(newScene, scenes.length - 1, $container);
+
+          // Trigger save to IndexedDB
+          if (typeof StorageManager !== "undefined") {
+            StorageManager.save(app);
+          }
 
           // Focus the new textarea (it's the last one added)
           setTimeout(function () {
