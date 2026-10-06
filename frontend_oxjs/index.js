@@ -1,7 +1,8 @@
 "use strict";
 
-const CORS_PROXY = "https://corsproxy.io/?url=";
-const API_URL = `${CORS_PROXY}${"https://pad.ma/api"}`;
+// NOTE: Replace 'YOUR_SECRET_KEY' with a value loaded from environment variables during build
+const CORS_PROXY = "https://corsproxy.io/?key=process.env.CORS_PROXY_KEY&url=";
+const API_URL = `${CORS_PROXY}${"https%3A%2F%2Fpad.ma%2Fapi"}`;
 
 window.onerror = function (error, url) {
   if (!url) {
