@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+  pull_request:
   workflow_dispatch:
     
 
@@ -17,9 +18,20 @@ jobs:
         with:
           persist-credentials: false
 
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+
       - name: Install 🔧
         working-directory: ./frontend
-        run: npm i
+        run: npm ci
+
+      - name: Test 🧪
+        working-directory: ./frontend
+        run: npm test
 
       - name: Build 🏗️
         working-directory: ./frontend

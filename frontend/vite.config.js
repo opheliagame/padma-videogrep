@@ -1,6 +1,6 @@
 import { fileURLToPath, URL } from 'node:url'
 
-import { defineConfig } from 'vite'
+import { defineConfig } from 'vitest/config'
 import vue from '@vitejs/plugin-vue'
 import vueJsx from '@vitejs/plugin-vue-jsx'
 import crossOriginIsolation from 'vite-plugin-cross-origin-isolation'
@@ -17,5 +17,9 @@ export default defineConfig({
   },
   optimizeDeps: {
     exclude: ['@ffmpeg/ffmpeg', '@ffmpeg/util']
+  },
+  test: {
+    environment: 'node',
+    include: ['tests/**/*.test.js']
   }
 })
