@@ -1,0 +1,13 @@
+{
+  "folders": [
+	{
+		"path": "../OxJS"
+	},
+	{
+		"path": "."
+	}
+],
+  "settings": {
+    "liveServer.settings.multiRootWorkspaceName": "padma-videogrep-oxjs"
+  }
+}

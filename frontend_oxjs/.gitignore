@@ -13,3 +13,5 @@ source/**/
 
 /node_modules
 dist/
+
+.env
