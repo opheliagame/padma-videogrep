@@ -22,12 +22,12 @@ All components in this repository follow the **Functional Factory Pattern**.
 
 ## 2. Standard File & Folder Structure
 
-When creating a new component, place it in `src/components/<ComponentName>/` with the following structure:
+When creating a new component, place it in `app/components/<ComponentName>/` with the following structure:
 
 
 ```
 
-src/components/
+app/components/
 └── /
 ├── .js       # Factory implementation
 ├── .css      # Component-scoped styles
@@ -42,7 +42,7 @@ src/components/
 Use the following template when creating new components:
 
 ```javascript
-// src/components/Button/Button.js
+// app/components/Button/Button.js
 
 /**
  * @typedef {Object} ButtonProps
@@ -139,7 +139,7 @@ export function createToggle({ initialActive = false, onChange } = {}) {
 * **CSS Custom Properties for Themes:** Use CSS variables for colors, spacing, and typography.
 
 ```css
-/* src/components/Button/Button.css */
+/* app/components/Button/Button.css */
 .btn {
   padding: var(--spacing-sm, 8px) var(--spacing-md, 16px);
   border-radius: var(--radius-sm, 4px);
@@ -174,7 +174,7 @@ Every component MUST have a co-located `.test.js` file tested via Vitest or Jest
 * [ ] Updates ARIA attributes on state changes.
 
 ```javascript
-// src/components/Button/Button.test.js
+// app/components/Button/Button.test.js
 import { describe, it, expect, vi } from 'vitest';
 import { createButton } from './Button.js';
 
