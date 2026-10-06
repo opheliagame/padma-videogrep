@@ -1,62 +1,60 @@
-# Supercuts(x)Pad.ma :wave:
+# Supercuts(x)Pad.ma
 
+Supercuts(x)Pad.ma searches the Pad.ma archive for transcript matches and turns matching video segments into a supercut. The repository currently contains a command-line version and a Vue-based web frontend.
 
-:arrow_right: searches the pad.ma archive by transcripts 
+## Requirements
 
-:arrow_right: returns set of videos or a single merged video, in other words, a supercut
+- Node.js 14 or newer. Install it from [nodejs.org](https://nodejs.org/en/download/).
+- FFmpeg available on your `PATH` for the command-line version and the local server.
 
-:arrow_right: this is a dra.ft (probably gonna call all my WIPs as dra.fts from now on)
+## Command-Line Version
 
-## Prerequisites :eye:
+Install the root dependencies and run a transcript search:
 
-+ this tool requires node version 14 or above. If you do not have node installed or have a lower version look [here](https://nodejs.org/en/download/) for instructions 
-+ since we are working with video information we also need ffmpeg to be installed, find how to do so [here](https://ffmpeg.org/download.html) 
-
-
-## Usage :keyboard:
-
-```
-cd <this folder>
-npm i
+```sh
+npm install
 node index.js "SEARCH_TERM"
 ```
 
-### Required Parameters 
-:arrow_right: SEARCH_TERM : the keyword to search by
+The search term is required. The command accepts these optional arguments:
 
-### Optional Parameters
-:arrow_right: RANGE : upper limit for number of videos to be processed, default value is 10
+- `-n NUMBER`: maximum number of Pad.ma search results to process; defaults to `10`.
+- `-c SECONDS`: maximum duration of each matching transcript segment.
+- `-dir NAME`: output folder name under `outputs/`.
+- `-o NAME`: output filename without the `.webm` extension.
 
-:arrow_right: DURATION_LIMIT : upper limit for length or duration of each cut
+Examples:
 
-:arrow_right: FOLDER_NAME : name of folder to save output
+```sh
+node index.js "SEARCH_TERM" -n 200 -c 10
+node index.js "SEARCH_TERM" -n 20 -dir my-search
+node index.js "SEARCH_TERM" -o my-supercut
+```
 
-:arrow_right: FILE_NAME : name of output file
+The command-line version writes individual segments and the merged supercut under `outputs/`.
 
-## Usage Examples :tada:
+## Web Frontend
 
-+ `node index.js SEARCH_TERM -n 200 -c 10` 
+Install the frontend dependencies and start the Vite development server:
 
-    takes cuts, with maximum duration as 10 seconds, from the first 200 search results  
+```sh
+cd frontend
+npm install
+npm run dev
+```
 
-+ `node index.js SEARCH_TERM -n 20 -dir FOLDER_NAME`
+Create a production build with `npm run build`. The frontend uses Vue 3, Pinia, and FFmpeg.wasm to search and play transcript clips and assemble selected clips in the browser.
 
-    takes cuts from the first 20 search results with any length and uses `FOLDER_NAME` as the output directory 
+## Local API Server
 
-+ `node index.js SEARCH_TERM -o FILE_NAME`
+The Express server provides video-segment and supercut endpoints. Start it from the repository root with:
 
-    takes cuts from the first 10 search results with any length and uses `FILE_NAME` as supercut output file name (without extension), output is always in `.webm`
+```sh
+node server.js
+```
 
-# LINKS OF THE AMAZING OUTPUT 
-https://drive.google.com/drive/folders/1OejG6FIYhx0UNnvyhC3aLJ_p037wbEGr
+It listens on port `3001` by default. Set the `PORT` environment variable to use another port.
 
-## TODO :woman_technologist:
+## Specifications
 
-- [x] add cmd throbber
-- [x] find way to shorten length of cuts
-- [ ] shift to something other than request-promise
-- [ ] provide more context (?) - transcript etc
-- [ ] expand pad.ma search functionality 
-- [ ] expand within each result search functionality - pattern matching
-- [ ] use path instead of template strings for folders 
-
+Project behavior and component specifications are indexed in [spec/README.md](spec/README.md). The command-line output examples are available [on Google Drive](https://drive.google.com/drive/folders/1OejG6FIYhx0UNnvyhC3aLJ_p037wbEGr).
