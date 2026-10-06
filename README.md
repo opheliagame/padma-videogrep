@@ -45,6 +45,17 @@ npm run dev
 
 Create a production build with `npm run build`. The frontend uses Vue 3, Pinia, and FFmpeg.wasm to search and play transcript clips and assemble selected clips in the browser.
 
+## Frontend Tests
+
+Run the frontend unit tests and production build from the repository root:
+
+```sh
+cd frontend
+npm install
+npm test
+npm run build
+```
+
 ## Local API Server
 
 The Express server provides video-segment and supercut endpoints. Start it from the repository root with:
