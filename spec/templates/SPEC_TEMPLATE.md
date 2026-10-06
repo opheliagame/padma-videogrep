@@ -1,6 +1,6 @@
 # [Specification Title]
 
-**ID:** `spec_000` (replace with the next unused ID, such as `spec_007`)  
+**ID:** Assign the next unused `spec_###` only for a cataloged behavior spec, such as a screen, repository/store, or service/action. Omit this line for architecture, design, and general reference documents.
 **Source:** `[path/to/source]`  
 **Purpose:** [Describe the responsibility of this screen, store, or service.]
 
