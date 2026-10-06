@@ -1,5 +1,8 @@
 # Pad.ma VideoGrep - Complete System Documentation
 
+**Project:** `frontend_oxjs/`  
+**Purpose:** Documents the OxJS application's AST-aware query parser, API integration, and UI architecture.
+
 Complete documentation for the AST-aware query parser system and application architecture.
 
 ## Table of Contents
@@ -87,8 +90,9 @@ padma-videogrep-oxjs/
 ├── dist/
 │   └── nearley-bundle.js   # Production bundle (17.6 KB minified)
 │
-├── docs/
-│   └── README.md           # This file
+├── ../spec/frontend_oxjs/
+│   ├── architecture.md
+│   └── design/color_system.md
 │
 ├── min/                    # OxJS framework (minified)
 ├── dev/                    # OxJS development files

@@ -1,6 +1,6 @@
 # Application Architecture
 
-**ID:** `spec_006`  
+**Project:** `frontend/` (Vue frontend)  
 **Purpose:** Shows how transcript search results move through the frontend and into clip playback.
 
 ## Transcript Search and Playback
