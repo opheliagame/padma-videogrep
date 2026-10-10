@@ -1,0 +1,89 @@
+.padmaHeader {
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 24px;
+}
+
+.padmaHeader.playmode {
+  background: var(--almost-black);
+}
+
+.padmaHeader .headerLeft {
+  display: flex;
+  flex: 1;
+  gap: 1rem;
+  align-items: last baseline;
+}
+
+.padmaHeader .headerModeButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  background: transparent;
+  font: inherit;
+  color: var(--ink);
+  font-size: medium;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.padmaHeader .headerCenter {
+  text-align: center;
+}
+
+.padmaHeader .headerBrand {
+  font-size: small;
+  font-weight: 400;
+  color: rgb(64, 64, 64);
+  letter-spacing: 0.3px;
+}
+
+.padmaHeader.playmode .headerTitle {
+  color: var(--warm-paper);
+}
+
+.padmaHeader .headerTitleEditable {
+  position: relative;
+}
+
+.padmaHeader .headerTitleDisplay {
+  border: 0;
+  background: transparent;
+  font: inherit;
+  font-size: xx-large;
+  font-weight: 300;
+  color: var(--ink);
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+  padding: 0 8px;
+}
+
+.padmaHeader .headerTitleDisplay:hover {
+  opacity: 0.7;
+}
+
+.padmaHeader .headerRight {
+  text-align: right;
+}
+
+.padmaHeader .headerLink {
+  font-size: 16px;
+  font-weight: 400;
+  color: rgb(64, 64, 64);
+  letter-spacing: 0.3px;
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.padmaHeader .headerLink:hover {
+  color: rgb(32, 64, 128);
+}
+
+.padmaHeader .headerQuery {
+  font-size: 32px;
+  font-weight: 400;
+  font-style: italic;
+}
