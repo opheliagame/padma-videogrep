@@ -152,9 +152,10 @@ This order ensures all dependencies are available before use.
 
 #### Components (`app/components/`)
 
-- **header.js**: Application header with title and mode toggle
-  - `HeaderComponent.create(app)` - Creates header element
-  - Toggle between write mode and play mode
+- **Header/Header.js**: Application header with title and mode toggle
+  - `createHeader(props)` - Creates a native header element from display props and callbacks
+  - `createHeader.destroy(element)` - Removes listeners before the header is replaced
+  - The app orchestrator handles title persistence and write/play mode changes
 
 - **sceneBuilder.js**: Scene input interface for write mode
   - `SceneBuilderComponent.create(app)` - Creates textarea inputs
@@ -187,11 +188,12 @@ This order ensures all dependencies are available before use.
 
 ### Key Global Objects
 
+The header factory is imported from `app/components/Header/Header.js` by `index.js`.
+
 ```javascript
 window.nearleyParser; // Parser from webpack bundle
 window.SceneParser; // Wrapper with parse() method
 window.APIService; // API communication
-window.HeaderComponent; // Header UI component
 window.SceneBuilderComponent; // Scene editing component
 window.PlayPanelComponent; // Video player component
 window.UIComponents; // Main UI orchestrator

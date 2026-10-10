@@ -1,4 +1,5 @@
-"use strict";
+import { createHeader, destroyHeader } from "./app/components/Header/Header.js";
+import { createAboutView } from "./app/views/About/AboutView.js";
 
 // NOTE: Replace 'YOUR_SECRET_KEY' with a value loaded from environment variables during build
 const CORS_PROXY = "https://corsproxy.io/?key=process.env.CORS_PROXY_KEY&url=";
@@ -52,6 +53,28 @@ Ox.load(function () {
     },
 
     load: function (browserSupported) {
+      var routeMode = window.location.hash.slice(1);
+      if (routeMode === "write" || routeMode === "play") {
+        app.state.mode = routeMode;
+      }
+
+      var currentPath = window.location.pathname.replace(/\/+$/, "") || "/";
+      if (currentPath === "/about") {
+        app.$ui.aboutView = createAboutView({
+          mode: app.state.mode,
+          screenplayName: app.data.screenplay.name,
+          navigate: function (path) {
+            if (app.$ui.aboutView) {
+              app.$ui.aboutView.destroy();
+              app.$ui.aboutView = null;
+            }
+            window.location.assign(path);
+          },
+        });
+        document.body.appendChild(app.$ui.aboutView.element);
+        return;
+      }
+
       app.api = Ox.API({ url: API_URL }, function () {
         console.log("API initialized");
 
@@ -92,11 +115,20 @@ Ox.load(function () {
       app.state.mode = app.state.mode === "write" ? "play" : "write";
       console.log("Mode toggled to:", app.state.mode);
 
+      var newPath = window.location.pathname + "#" + app.state.mode;
+      window.history.pushState({ mode: app.state.mode }, "", newPath);
+
       // Rebuild both header and main panel with the new mode
       var $newHeader = app.ui.header();
       var $newMainPanel = app.ui.mainPanel();
       app.$ui.appPanel.replaceElement(0, $newHeader);
       app.$ui.appPanel.replaceElement(1, $newMainPanel);
+
+      if (app.state.mode === "play") {
+        setTimeout(function () {
+          UIComponents.fetchClips(app);
+        }, 50);
+      }
     },
 
     ui: {
@@ -111,7 +143,25 @@ Ox.load(function () {
       },
 
       header: function () {
-        return HeaderComponent.create(app);
+        if (app.$ui.headerElement) {
+          destroyHeader(app.$ui.headerElement);
+        }
+
+        var headerElement = createHeader({
+          mode: app.state.mode,
+          screenplayName: app.data.screenplay.name,
+          currentScene: app.state.currentScene,
+          onTitleChange: function (newName) {
+            app.data.screenplay.name = newName;
+            if (typeof StorageManager !== "undefined") {
+              StorageManager.save(app);
+            }
+          },
+          onModeToggle: app.toggleMode,
+        });
+
+        app.$ui.headerElement = headerElement;
+        return Ox.Element().append(headerElement);
       },
 
       mainPanel: function () {
