@@ -7,7 +7,7 @@
     "build:parser": "nearleyc app/utils/scene-query.ne -o app/utils/nearleyParser.js",
     "build:bundle": "webpack",
     "build": "npm run build:parser && npm run build:bundle && vite build",
-    "test": "vitest run app/components/Header/Header.test.js app/views/About/AboutView.test.js",
+    "test": "vitest run app/views",
     "dev": "vite",
     "predev": "npm run build:parser && npm run build:bundle"
   },
