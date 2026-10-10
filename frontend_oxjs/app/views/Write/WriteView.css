@@ -1,0 +1,86 @@
+.sceneText {
+  font-size: large;
+  font-weight: bold;
+  color: var(--ink);
+  display: inline;
+  margin-right: 16px;
+}
+
+.sceneText.bold {
+  font-weight: 400;
+  color: black;
+}
+
+.sceneTextInput {
+  padding: 10px;
+  border: 1px solid transparent;
+  font-size: 14px;
+  line-height: 1.5;
+  width: 100%;
+  field-sizing: content;
+
+  background-image: none !important;
+  border: none !important;
+  color: var(--ink) !important;
+
+  font-size: large;
+  font-weight: 600;
+  display: inline;
+}
+
+.generateButton {
+  display: none;
+  user-select: none;
+}
+
+.sceneTextInput:focus {
+  outline: none;
+  border-color: rgb(32, 64, 128);
+  box-shadow: 0 0 0 2px rgba(32, 64, 128, 0.1);
+}
+
+.sceneTextInput::placeholder {
+  color: rgb(180, 180, 180);
+  font-style: italic;
+  font-size: 13px;
+}
+
+.generateButton:hover {
+  background: rgb(230, 230, 230) !important;
+  border-color: rgb(32, 64, 128) !important;
+  color: rgb(32, 64, 128);
+}
+
+.generateButton:active {
+  transform: translateY(1px);
+}
+
+.OxSplitPanel > .writeLeftPanel,
+.writeLeftPanel {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  padding: 38px 42px;
+}
+
+.writeSceneList {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+
+.sceneContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.writePanelPlaceholder {
+  color: rgb(150, 150, 150);
+  font-size: 13px;
+  font-style: italic;
+  text-align: center;
+  padding: 16px;
+}

@@ -7,9 +7,9 @@ describe("createAboutView", () => {
   it("renders the project information and page navigation", () => {
     const view = createAboutView({ navigate: vi.fn() });
 
-    expect(view.element.querySelector("main").getAttribute("aria-labelledby")).toBe(
-      "aboutViewTitle",
-    );
+    expect(
+      view.element.querySelector("main").getAttribute("aria-labelledby"),
+    ).toBe("aboutViewTitle");
     expect(view.element.querySelector("h1").textContent).toBe(
       "Stories change how we see things.",
     );
@@ -29,7 +29,7 @@ describe("createAboutView", () => {
 
     homeLink.click();
     modeButton.click();
-    expect(navigate.mock.calls).toEqual([["/"], ["/#play"]]);
+    expect(navigate.mock.calls).toEqual([["/"], ["/watch"]]);
 
     view.destroy();
     homeLink.click();

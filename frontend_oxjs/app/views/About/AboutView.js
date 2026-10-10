@@ -1,7 +1,4 @@
-import {
-  createHeader,
-  destroyHeader,
-} from "../../components/Header/Header.js";
+import { createHeader, destroyHeader } from "../../components/Header/Header.js";
 import "./AboutView.css";
 
 /**
@@ -18,7 +15,7 @@ export function createAboutView({
     mode,
     screenplayName,
     onModeToggle:
-      typeof navigate === "function" ? () => navigate("/#play") : undefined,
+      typeof navigate === "function" ? () => navigate("/write") : undefined,
   });
   const element = document.createElement("div");
   element.className = "aboutView";
@@ -53,7 +50,8 @@ export function createAboutView({
 
   const essayLink = document.createElement("a");
   essayLink.className = "aboutView__link";
-  essayLink.href = "https://opheliagame.github.io/garden/projects/freeFall-draft";
+  essayLink.href =
+    "https://opheliagame.github.io/garden/projects/experiments-with-text";
   essayLink.target = "_blank";
   essayLink.rel = "noopener noreferrer";
   essayLink.textContent = "Read the project notes";

@@ -9,7 +9,6 @@ const runtimeScripts = [
   "app/components/sceneBuilder.js",
   "app/components/playPanel.js",
   "app/components/generativityControls.js",
-  "app/components/ui.js",
 ];
 
 function copyRuntimeFiles() {

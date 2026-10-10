@@ -170,10 +170,9 @@ This order ensures all dependencies are available before use.
   - `PlayPanelComponent.renderClipList(app, items)` - Renders clip list
   - Handles video playback and clip metadata display
 
-- **ui.js**: Main UI orchestrator
-  - `UIComponents.mainPanel(app)` - Routes between write/play modes
-  - `UIComponents.fetchClips(app)` - Fetches clips from all scenes
-  - `UIComponents.playClips(app, items)` - Plays clips sequentially
+- **ui.js**: Playback actions imported by the main application
+  - `fetchClips(app)` - Fetches clips from all scenes
+  - `playClips(app, items)` - Plays clips sequentially
   - Uses `scene.ast` for AST-based queries
   - Falls back with warning if no AST available
 
@@ -196,7 +195,6 @@ window.SceneParser; // Wrapper with parse() method
 window.APIService; // API communication
 window.SceneBuilderComponent; // Scene editing component
 window.PlayPanelComponent; // Video player component
-window.UIComponents; // Main UI orchestrator
 ```
 
 ### Data Flow
@@ -214,7 +212,7 @@ window.UIComponents; // Main UI orchestrator
 1. Click "Play Mode" button
 2. Switch UI to play panel
 3. Click "Fetch Clips"
-4. `UIComponents.fetchClips(app)` processes all scenes
+4. `fetchClips(app)` processes all scenes
 5. For each scene: `APIService.findClipsByAST(app, scene.ast, callback)`
 6. API executes query using AST structure
 7. Clips displayed in video player
