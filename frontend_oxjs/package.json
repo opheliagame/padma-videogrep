@@ -4,12 +4,11 @@
   "description": "Video search and clip extraction tool built with OxJS",
   "main": "index.js",
   "scripts": {
-    "build:parser": "nearleyc app/utils/scene-query.ne -o app/utils/nearleyParser.js",
-    "build:bundle": "webpack",
-    "build": "npm run build:parser && npm run build:bundle && vite build",
-    "test": "vitest run app/views app/components",
+    "build:parser": "nearleyc app/core/SceneParser/scene-query.ne -o app/core/SceneParser/nearleyParser.js",
+    "build": "npm run build:parser && vite build",
+    "test": "vitest run app/api app/views app/components app/core",
     "dev": "vite",
-    "predev": "npm run build:parser && npm run build:bundle"
+    "predev": "npm run build:parser"
   },
   "keywords": [
     "video",
@@ -23,8 +22,6 @@
     "jsdom": "^26.1.0",
     "nearley": "^2.20.1",
     "vite": "^5.0.11",
-    "vitest": "^2.1.9",
-    "webpack": "^5.105.0",
-    "webpack-cli": "^6.0.1"
+    "vitest": "^2.1.9"
   }
 }

@@ -3,6 +3,10 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { createWriteView } from "./WriteView.js";
 
+vi.mock("../../core/Storage/StorageManager.js", () => ({
+  storageManager: { save: vi.fn() },
+}));
+
 function createOxElement() {
   return {
     classes: [],
@@ -20,7 +24,6 @@ function createOxElement() {
 
 describe("createWriteView", () => {
   const originalOx = globalThis.Ox;
-  const originalSceneParser = window.SceneParser;
 
   afterEach(() => {
     vi.useRealTimers();
@@ -28,11 +31,6 @@ describe("createWriteView", () => {
       delete globalThis.Ox;
     } else {
       globalThis.Ox = originalOx;
-    }
-    if (originalSceneParser === undefined) {
-      delete window.SceneParser;
-    } else {
-      window.SceneParser = originalSceneParser;
     }
   });
 
@@ -44,13 +42,6 @@ describe("createWriteView", () => {
       .mockReturnValueOnce(contentPanel)
       .mockReturnValueOnce(page);
     globalThis.Ox = { Element: createOxElement, SplitPanel: splitPanelConfig };
-    window.SceneParser = {
-      parse: vi.fn((queryText) => ({
-        ast: { queryText },
-        keywords: [queryText],
-        operator: "&",
-      })),
-    };
     const app = {
       $ui: {},
       data: {
@@ -107,13 +98,6 @@ describe("createWriteView", () => {
         .fn()
         .mockReturnValueOnce(createOxElement())
         .mockReturnValueOnce(createOxElement()),
-    };
-    window.SceneParser = {
-      parse: vi.fn((queryText) => ({
-        ast: { queryText },
-        keywords: [queryText],
-        operator: "&",
-      })),
     };
     const app = {
       $ui: {},

@@ -1,6 +1,7 @@
 import { createAboutView } from "./app/views/About/AboutView.js";
 import { createWatchView } from "./app/views/Watch/WatchView.js";
 import { createWriteView } from "./app/views/Write/WriteView.js";
+import { storageManager } from "./app/core/Storage/StorageManager.js";
 
 // NOTE: Replace 'YOUR_SECRET_KEY' with a value loaded from environment variables during build
 const CORS_PROXY = "https://corsproxy.io/?key=process.env.CORS_PROXY_KEY&url=";
@@ -37,9 +38,9 @@ Ox.load(function () {
 
     init: function () {
       // Initialize storage and load saved data
-      StorageManager.init(function (dbReady) {
+      storageManager.init(function (dbReady) {
         if (dbReady) {
-          StorageManager.load(function (savedData) {
+          storageManager.load(function (savedData) {
             if (savedData) {
               // Restore saved state and data
               app.state = Object.assign(app.state, savedData.state);
@@ -104,7 +105,7 @@ Ox.load(function () {
       var triggerSave = function () {
         clearTimeout(saveTimeout);
         saveTimeout = setTimeout(function () {
-          StorageManager.save(app);
+          storageManager.save(app);
         }, 1000); // Save after 1 second of no changes
       };
 
@@ -146,9 +147,7 @@ Ox.load(function () {
           onModeToggle: app.toggleMode,
           onTitleChange: function (newName) {
             app.data.screenplay.name = newName;
-            if (typeof StorageManager !== "undefined") {
-              StorageManager.save(app);
-            }
+            storageManager.save(app);
           },
         });
         app.$ui.activePage.element.appendTo(Ox.$body);

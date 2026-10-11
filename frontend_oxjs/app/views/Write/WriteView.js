@@ -3,6 +3,7 @@ import {
   createGenerativityControls,
   destroyGenerativityControls,
 } from "../../components/GenerativityControls/GenerativityControls.js";
+import { storageManager } from "../../core/Storage/StorageManager.js";
 import {
   createSceneBuilder,
   destroySceneBuilder,
@@ -30,9 +31,7 @@ export function createWriteView({ app, onModeToggle, onTitleChange }) {
   const scenes = app.data.screenplay.scenes;
   let focusTimeout = null;
   const saveScenes = function () {
-    if (typeof StorageManager !== "undefined") {
-      StorageManager.save(app);
-    }
+    storageManager.save(app);
   };
   const handleSceneChange = function ({ sceneIndex, queryText }) {
     const scene = scenes[sceneIndex];
@@ -74,9 +73,7 @@ export function createWriteView({ app, onModeToggle, onTitleChange }) {
     initialValues: app.state.generativity,
     onChange(values) {
       app.state.generativity = values;
-      if (typeof StorageManager !== "undefined") {
-        StorageManager.save(app);
-      }
+      storageManager.save(app);
     },
   });
   const generativityControlsPanel = Ox.Element().append(generativityControls);
