@@ -20,30 +20,23 @@ function createOxElement() {
 
 describe("createWriteView", () => {
   const originalOx = globalThis.Ox;
-  const originalSceneBuilder = globalThis.SceneBuilderComponent;
-  const originalGenerativityControls = globalThis.GenerativityControlsComponent;
+  const originalSceneParser = window.SceneParser;
 
   afterEach(() => {
+    vi.useRealTimers();
     if (originalOx === undefined) {
       delete globalThis.Ox;
     } else {
       globalThis.Ox = originalOx;
     }
-    if (originalSceneBuilder === undefined) {
-      delete globalThis.SceneBuilderComponent;
+    if (originalSceneParser === undefined) {
+      delete window.SceneParser;
     } else {
-      globalThis.SceneBuilderComponent = originalSceneBuilder;
-    }
-    if (originalGenerativityControls === undefined) {
-      delete globalThis.GenerativityControlsComponent;
-    } else {
-      globalThis.GenerativityControlsComponent = originalGenerativityControls;
+      window.SceneParser = originalSceneParser;
     }
   });
 
   it("composes a page with a header and horizontal write panel", () => {
-    const sceneBuilder = createOxElement();
-    const controls = createOxElement();
     const contentPanel = createOxElement();
     const page = createOxElement();
     const splitPanelConfig = vi
@@ -51,22 +44,42 @@ describe("createWriteView", () => {
       .mockReturnValueOnce(contentPanel)
       .mockReturnValueOnce(page);
     globalThis.Ox = { Element: createOxElement, SplitPanel: splitPanelConfig };
-    globalThis.SceneBuilderComponent = {
-      create: vi.fn(() => sceneBuilder),
+    window.SceneParser = {
+      parse: vi.fn((queryText) => ({
+        ast: { queryText },
+        keywords: [queryText],
+        operator: "&",
+      })),
     };
-    globalThis.GenerativityControlsComponent = {
-      create: vi.fn(() => controls),
+    const app = {
+      $ui: {},
+      data: {
+        screenplay: {
+          name: "Test screenplay",
+          scenes: [{ name: "scene 1", queryText: "water", ast: null }],
+        },
+      },
+      state: {},
     };
-    const app = { $ui: {}, data: { screenplay: { name: "Test screenplay" } } };
     const onModeToggle = vi.fn();
 
     const view = createWriteView({ app, onModeToggle });
 
     expect(view.element).toBe(page);
     expect(contentPanel.classes).toContain("writeLeftPanel");
-    expect(splitPanelConfig).toHaveBeenNthCalledWith(1, {
-      elements: [{ element: sceneBuilder }, { element: controls, size: 220 }],
-      orientation: "horizontal",
+    const writePanelConfig = splitPanelConfig.mock.calls[0][0];
+    const sceneBuilder = writePanelConfig.elements[0].element.children[0];
+    expect(sceneBuilder.className).toBe("sceneBuilder");
+    expect(sceneBuilder.querySelector("textarea").value).toBe("water");
+    expect(writePanelConfig.elements[1].size).toBe(220);
+    expect(writePanelConfig.elements[1].element.children[0].className).toBe(
+      "generativityControls",
+    );
+    expect(writePanelConfig.orientation).toBe("horizontal");
+    expect(app.state.generativity).toEqual({
+      length: "medium",
+      sortBy: "relevance",
+      limit: 10,
     });
     const pageConfig = splitPanelConfig.mock.calls[1][0];
     expect(pageConfig.orientation).toBe("vertical");
@@ -87,29 +100,34 @@ describe("createWriteView", () => {
     expect(onModeToggle).toHaveBeenCalledOnce();
   });
 
-  it("clears its controls reference without clearing a replacement", () => {
-    const controlsReference = {};
+  it("writes control changes to app state", () => {
     globalThis.Ox = {
       Element: createOxElement,
-      SplitPanel: createOxElement,
+      SplitPanel: vi
+        .fn()
+        .mockReturnValueOnce(createOxElement())
+        .mockReturnValueOnce(createOxElement()),
     };
-    globalThis.SceneBuilderComponent = {
-      create: createOxElement,
-    };
-    globalThis.GenerativityControlsComponent = {
-      create: vi.fn(() => createOxElement()),
+    window.SceneParser = {
+      parse: vi.fn((queryText) => ({
+        ast: { queryText },
+        keywords: [queryText],
+        operator: "&",
+      })),
     };
     const app = {
-      $ui: { generativityControls: controlsReference },
-      data: { screenplay: { name: "Test screenplay" } },
+      $ui: {},
+      data: { screenplay: { name: "Test screenplay", scenes: [] } },
+      state: {},
     };
 
-    const view = createWriteView({ app });
-    view.destroy();
-    expect(app.$ui.generativityControls).toBeNull();
+    createWriteView({ app });
+    const controls =
+      globalThis.Ox.SplitPanel.mock.calls[0][0].elements[1].element.children[0];
+    const sortSelect = controls.querySelector("select");
+    sortSelect.value = "date";
+    sortSelect.dispatchEvent(new Event("change", { bubbles: true }));
 
-    app.$ui.generativityControls = "replacement";
-    view.destroy();
-    expect(app.$ui.generativityControls).toBe("replacement");
+    expect(app.state.generativity.sortBy).toBe("date");
   });
 });

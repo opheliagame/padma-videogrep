@@ -1,0 +1,49 @@
+.sceneBuilder {
+  width: 100%;
+}
+
+.sceneBuilder__list {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+
+.sceneBuilder__scene {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+}
+
+.sceneBuilder__label {
+  color: var(--ink-light);
+  font-size: medium;
+  font-style: italic;
+  font-weight: 300;
+}
+
+.sceneBuilder__input {
+  width: 100%;
+  padding: 10px;
+  border: none !important;
+  background-image: none !important;
+  color: var(--ink) !important;
+  font-size: large;
+  font-weight: 600;
+  line-height: 1.5;
+  field-sizing: content;
+}
+
+.sceneBuilder__input:focus {
+  outline: none;
+  border-color: rgb(32, 64, 128);
+  box-shadow: 0 0 0 2px rgba(32, 64, 128, 0.1);
+}
+
+.sceneBuilder__input::placeholder {
+  color: rgb(180, 180, 180);
+  font-size: 13px;
+  font-style: italic;
+}

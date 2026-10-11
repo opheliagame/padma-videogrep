@@ -1,4 +1,14 @@
 import { createHeader, destroyHeader } from "../../components/Header/Header.js";
+import {
+  createGenerativityControls,
+  destroyGenerativityControls,
+} from "../../components/GenerativityControls/GenerativityControls.js";
+import {
+  createSceneBuilder,
+  destroySceneBuilder,
+  renderSceneBuilder,
+} from "../../components/SceneBuilder/SceneBuilder.js";
+import { initializeScenes, updateSceneQuery } from "../sceneData.js";
 import "./WriteView.css";
 
 /**
@@ -7,6 +17,8 @@ import "./WriteView.css";
  * @returns {{ element: Object, destroy: () => void }}
  */
 export function createWriteView({ app, onModeToggle, onTitleChange }) {
+  initializeScenes(app);
+
   const header = createHeader({
     mode: "write",
     screenplayName: app.data.screenplay.name,
@@ -15,14 +27,64 @@ export function createWriteView({ app, onModeToggle, onTitleChange }) {
   });
   const headerSection = Ox.Element().append(header);
 
-  const sceneBuilder = window.SceneBuilderComponent.create(app);
-  const generativityControls = window.GenerativityControlsComponent.create(app);
-  const controlsReference = app.$ui.generativityControls;
+  const scenes = app.data.screenplay.scenes;
+  let focusTimeout = null;
+  const saveScenes = function () {
+    if (typeof StorageManager !== "undefined") {
+      StorageManager.save(app);
+    }
+  };
+  const handleSceneChange = function ({ sceneIndex, queryText }) {
+    const scene = scenes[sceneIndex];
+    if (scene && updateSceneQuery(scene, queryText)) {
+      saveScenes();
+    }
+  };
+  let sceneBuilder;
+  const handleSceneAdd = function ({ sceneIndex, queryText }) {
+    const scene = scenes[sceneIndex];
+    if (!scene || !updateSceneQuery(scene, queryText)) return;
+
+    scenes.push({
+      name: `scene ${scenes.length + 1}`,
+      grammars: [],
+      queryText: "",
+      ast: null,
+    });
+    renderSceneBuilder(sceneBuilder, scenes);
+    saveScenes();
+
+    clearTimeout(focusTimeout);
+    focusTimeout = setTimeout(function () {
+      const inputs = sceneBuilder.querySelectorAll(".sceneBuilder__input");
+      inputs[inputs.length - 1]?.focus();
+    }, 10);
+  };
+  sceneBuilder = createSceneBuilder({
+    scenes,
+    onSceneChange: handleSceneChange,
+    onSceneAdd: handleSceneAdd,
+  });
+  const sceneBuilderPanel = Ox.Element().append(sceneBuilder);
+  app.state.generativity = Object.assign(
+    { length: "medium", sortBy: "relevance", limit: 10 },
+    app.state.generativity,
+  );
+  const generativityControls = createGenerativityControls({
+    initialValues: app.state.generativity,
+    onChange(values) {
+      app.state.generativity = values;
+      if (typeof StorageManager !== "undefined") {
+        StorageManager.save(app);
+      }
+    },
+  });
+  const generativityControlsPanel = Ox.Element().append(generativityControls);
 
   const content = Ox.SplitPanel({
     elements: [
-      { element: sceneBuilder },
-      { element: generativityControls, size: 220 },
+      { element: sceneBuilderPanel },
+      { element: generativityControlsPanel, size: 220 },
     ],
     orientation: "horizontal",
   }).addClass("writeLeftPanel");
@@ -35,10 +97,10 @@ export function createWriteView({ app, onModeToggle, onTitleChange }) {
   return {
     element,
     destroy() {
+      clearTimeout(focusTimeout);
       destroyHeader(header);
-      if (app.$ui.generativityControls === controlsReference) {
-        app.$ui.generativityControls = null;
-      }
+      destroySceneBuilder(sceneBuilder);
+      destroyGenerativityControls(generativityControls);
     },
   };
 }

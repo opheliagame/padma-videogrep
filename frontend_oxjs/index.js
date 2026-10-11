@@ -86,14 +86,6 @@ Ox.load(function () {
       app.api = Ox.API({ url: API_URL }, function () {
         console.log("API initialized");
 
-        // Initialize scenes with parsed AST
-        if (
-          typeof SceneBuilderComponent !== "undefined" &&
-          SceneBuilderComponent.initializeScenes
-        ) {
-          SceneBuilderComponent.initializeScenes(app);
-        }
-
         app.ui.renderModePage();
         app.state.loaded = true;
         window.addEventListener("popstate", app.handlePopState);

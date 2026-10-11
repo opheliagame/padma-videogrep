@@ -1,6 +1,6 @@
 // @vitest-environment jsdom
 
-import { afterEach, describe, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { fetchClips } from "../../components/ui.js";
 import { createWatchView } from "./WatchView.js";
 
@@ -47,6 +47,17 @@ function createApp() {
 
 describe("createWatchView", () => {
   const originalOx = globalThis.Ox;
+  const originalSceneParser = window.SceneParser;
+
+  beforeEach(() => {
+    window.SceneParser = {
+      parse: vi.fn((queryText) => ({
+        ast: { queryText },
+        keywords: [queryText],
+        operator: "&",
+      })),
+    };
+  });
 
   afterEach(() => {
     vi.useRealTimers();
@@ -55,6 +66,11 @@ describe("createWatchView", () => {
       delete globalThis.Ox;
     } else {
       globalThis.Ox = originalOx;
+    }
+    if (originalSceneParser === undefined) {
+      delete window.SceneParser;
+    } else {
+      window.SceneParser = originalSceneParser;
     }
   });
 
@@ -80,6 +96,7 @@ describe("createWatchView", () => {
       "playSectionMiddle playmode",
     );
     expect(sceneList.children).toHaveLength(2);
+    expect(app.data.screenplay.scenes[0].ast).toEqual({ queryText: "water" });
     expect(sceneList.children[0].children[1].content).toBe("water");
     expect(sceneList.children[1].children[1].content).toBe("night train");
     expect(app.$ui.$playVideoContainer).toBe(middleSection.element);
