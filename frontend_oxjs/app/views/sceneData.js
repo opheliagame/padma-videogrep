@@ -1,10 +1,7 @@
-function updateScene(scene, queryText) {
-  if (typeof window.SceneParser === "undefined") {
-    console.error("SceneParser not available");
-    return false;
-  }
+import { sceneParser } from "../core/SceneParser/SceneParser.js";
 
-  const parsedScene = window.SceneParser.parse(queryText);
+function updateScene(scene, queryText) {
+  const parsedScene = sceneParser.parse(queryText);
   scene.queryText = queryText;
   scene.ast = parsedScene.ast;
   scene.grammars = parsedScene.keywords.map(function (keyword, index) {
@@ -18,11 +15,6 @@ function updateScene(scene, queryText) {
 }
 
 export function initializeScenes(app) {
-  if (typeof window.SceneParser === "undefined") {
-    console.error("SceneParser not available");
-    return;
-  }
-
   app.data.screenplay.scenes.forEach(function (scene) {
     if (!scene.ast && scene.queryText) {
       updateScene(scene, scene.queryText);

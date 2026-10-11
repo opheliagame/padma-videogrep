@@ -1,12 +1,14 @@
-@{%
-const lexer = require("moo");
-const myLexer = lexer.compile({
+@preprocessor esmodule
+
+@{% 
+import moo from "moo";
+const myLexer = moo.compile({
   WS: { match: /\s+/, lineBreaks: true },
   AND: ["AND", "and"],
   OR: ["OR", "or"],
   LPAREN: /\(/,
   RPAREN: /\)/,
-  WORD: /[a-zA-Z0-9][a-zA-Z0-9_]*/
+  WORD: /[a-zA-Z0-9][a-zA-Z0-9_]*/,
 });
 %}
 

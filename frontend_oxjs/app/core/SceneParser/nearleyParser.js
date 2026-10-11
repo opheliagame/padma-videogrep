@@ -1,20 +1,18 @@
 // Generated automatically by nearley, version 2.20.1
 // http://github.com/Hardmath123/nearley
-(function () {
 function id(x) { return x[0]; }
-
-const lexer = require("moo");
-const myLexer = lexer.compile({
+ 
+import moo from "moo";
+const myLexer = moo.compile({
   WS: { match: /\s+/, lineBreaks: true },
   AND: ["AND", "and"],
   OR: ["OR", "or"],
   LPAREN: /\(/,
   RPAREN: /\)/,
-  WORD: /[a-zA-Z0-9][a-zA-Z0-9_]*/
+  WORD: /[a-zA-Z0-9][a-zA-Z0-9_]*/,
 });
-var grammar = {
-    Lexer: myLexer,
-    ParserRules: [
+let Lexer = myLexer;
+let ParserRules = [
     {"name": "Query", "symbols": ["_", "Expression", "_"], "postprocess": (d) => d[1]},
     {"name": "Expression$ebnf$1", "symbols": []},
     {"name": "Expression$ebnf$1$subexpression$1", "symbols": ["_", (myLexer.has("OR") ? {type: "OR"} : OR), "_", "Term"]},
@@ -39,12 +37,6 @@ var grammar = {
     {"name": "_$ebnf$1", "symbols": []},
     {"name": "_$ebnf$1", "symbols": ["_$ebnf$1", (myLexer.has("WS") ? {type: "WS"} : WS)], "postprocess": function arrpush(d) {return d[0].concat([d[1]]);}},
     {"name": "_", "symbols": ["_$ebnf$1"], "postprocess": () => null}
-]
-  , ParserStart: "Query"
-}
-if (typeof module !== 'undefined'&& typeof module.exports !== 'undefined') {
-   module.exports = grammar;
-} else {
-   window.grammar = grammar;
-}
-})();
+];
+let ParserStart = "Query";
+export default { Lexer, ParserRules, ParserStart };
