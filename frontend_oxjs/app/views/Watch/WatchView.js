@@ -1,5 +1,6 @@
 import { createHeader, destroyHeader } from "../../components/Header/Header.js";
 import { fetchClips } from "../../components/ui.js";
+import { initializeScenes } from "../sceneData.js";
 import "./WatchView.css";
 
 /**
@@ -8,6 +9,8 @@ import "./WatchView.css";
  * @returns {{ element: Object, destroy: () => void }}
  */
 export function createWatchView({ app, onModeToggle, onTitleChange }) {
+  initializeScenes(app);
+
   const header = createHeader({
     mode: "play",
     screenplayName: app.data.screenplay.name,

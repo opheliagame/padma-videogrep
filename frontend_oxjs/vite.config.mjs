@@ -6,9 +6,6 @@ const runtimeScripts = [
   "app/utils/parser.js",
   "app/utils/storage.js",
   "app/api/service.js",
-  "app/components/sceneBuilder.js",
-  "app/components/playPanel.js",
-  "app/components/generativityControls.js",
 ];
 
 function copyRuntimeFiles() {
