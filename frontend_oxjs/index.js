@@ -4,9 +4,10 @@ import { createWatchView } from "./app/views/Watch/WatchView.js";
 import { createWriteView } from "./app/views/Write/WriteView.js";
 import { storageManager } from "./app/core/Storage/StorageManager.js";
 
-// NOTE: Replace 'YOUR_SECRET_KEY' with a value loaded from environment variables during build
-const CORS_PROXY = "https://corsproxy.io/?key=process.env.CORS_PROXY_KEY&url=";
-const API_URL = `${CORS_PROXY}${"https%3A%2F%2Fpad.ma%2Fapi"}`;
+// CORS proxy only for local dev; key comes from VITE_CORS_PROXY_KEY in frontend_oxjs/.env
+const API_URL = import.meta.env.DEV
+  ? `https://corsproxy.io/?key=${import.meta.env.VITE_CORS_PROXY_KEY}&url=${encodeURIComponent("https://pad.ma/api")}`
+  : "https://pad.ma/api";
 
 window.onerror = function (error, url) {
   if (!url) {
