@@ -10,6 +10,7 @@ const headerCleanup = new WeakMap();
 export function createHeader({
   mode = "write",
   screenplayName = "",
+  homeHref,
   aboutHref,
   modeLabel,
   onTitleChange,
@@ -34,7 +35,15 @@ export function createHeader({
 
   var brand = document.createElement("span");
   brand.className = "headerBrand";
-  brand.textContent = "pad.ma videogrep";
+  if (homeHref) {
+    var homeLink = document.createElement("a");
+    homeLink.className = "headerHomeLink";
+    homeLink.href = homeHref;
+    homeLink.textContent = "pad.ma videogrep";
+    brand.append(homeLink);
+  } else {
+    brand.textContent = "pad.ma videogrep";
+  }
   if (aboutHref) {
     var aboutLink = document.createElement("a");
     aboutLink.className = "headerLink";

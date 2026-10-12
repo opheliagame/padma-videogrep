@@ -61,10 +61,17 @@ describe("createHeader", () => {
   });
 
   it("links to the about page and accepts a custom mode label", () => {
-    const header = createHeader({ aboutHref: "/about", modeLabel: "Write" });
+    const header = createHeader({
+      homeHref: "/",
+      aboutHref: "/about",
+      modeLabel: "Write",
+    });
 
     expect(header.querySelector(".headerBrand").textContent).toBe(
       "pad.ma videogrep・about",
+    );
+    expect(header.querySelector(".headerHomeLink").getAttribute("href")).toBe(
+      "/",
     );
     expect(header.querySelector(".headerLink").getAttribute("href")).toBe(
       "/about",

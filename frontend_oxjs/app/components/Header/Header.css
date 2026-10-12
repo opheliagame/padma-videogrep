@@ -42,6 +42,15 @@
   letter-spacing: 0.3px;
 }
 
+.padmaHeader .headerHomeLink {
+  color: inherit;
+  text-decoration: none;
+}
+
+.padmaHeader .headerHomeLink:hover {
+  color: rgb(32, 64, 128);
+}
+
 .padmaHeader .headerTitleEditable {
   position: relative;
 }
