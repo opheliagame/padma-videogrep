@@ -45,7 +45,7 @@ export function createAboutView({
 
   const homeLink = document.createElement("a");
   homeLink.className = "aboutView__link";
-  homeLink.href = "/";
+  homeLink.href = import.meta.env.BASE_URL;
   homeLink.textContent = "Return to the project";
 
   const essayLink = document.createElement("a");
