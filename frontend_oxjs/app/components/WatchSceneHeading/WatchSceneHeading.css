@@ -1,0 +1,66 @@
+.watchSceneHeading {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 12px;
+  min-height: 60px;
+  padding: 14px 18px;
+  color: var(--white);
+  background: transparent !important;
+}
+
+.watchSceneHeading > * {
+  color: inherit;
+  background: transparent !important;
+}
+
+.watchSceneHeading__scene {
+  font-size: 13px;
+  white-space: nowrap;
+}
+
+.watchSceneHeading__title {
+  min-width: 0;
+  margin: 0;
+  overflow: hidden;
+  font-size: 30px;
+  font-weight: 400;
+  font-style: italic;
+  text-align: left;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.watchSceneHeading__modeButton {
+  padding: 8px 10px;
+  border: 0;
+  font: inherit;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.watchSceneHeading__modeButton:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 2px;
+}
+
+@media (max-width: 640px) {
+  .watchSceneHeading {
+    min-height: 46px;
+    gap: 8px;
+    padding: 8px 10px;
+  }
+
+  .watchSceneHeading__scene {
+    font-size: 10px;
+  }
+
+  .watchSceneHeading__title {
+    font-size: 15px;
+  }
+
+  .watchSceneHeading__modeButton {
+    padding: 6px;
+    font-size: 11px;
+  }
+}

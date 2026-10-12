@@ -1,8 +1,52 @@
 // @vitest-environment jsdom
 
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import { sceneParser } from "../core/SceneParser/SceneParser.js";
 import "./service.js";
+
+it("retains returned metadata and all annotation text in clips", () => {
+  const callback = vi.fn();
+  const app = {
+    state: {},
+    api: {
+      findClips(request, onResult) {
+        onResult({
+          data: {
+            items: [
+              {
+                id: "ABC/0-12",
+                title: "Interview",
+                source: "Archive",
+                date: "2025-11-12",
+                in: 0,
+                out: 12,
+                annotations: [
+                  { value: "First paragraph" },
+                  { value: "Second paragraph" },
+                ],
+              },
+            ],
+          },
+        });
+      },
+    },
+  };
+
+  window.APIService.findClipsByAST(
+    app,
+    { type: "KEYWORD", value: "water" },
+    callback,
+  );
+
+  expect(callback).toHaveBeenCalledWith([
+    expect.objectContaining({
+      id: "ABC",
+      source: "Archive",
+      date: "2025-11-12",
+      transcript: "First paragraph\n\nSecond paragraph",
+    }),
+  ]);
+});
 
 // Test AST nodes
 const testCases = [

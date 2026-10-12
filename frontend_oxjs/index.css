@@ -41,6 +41,10 @@
   /* Interactive Colors */
   --blue-highlight: rgb(220, 235, 250);
   --dark-overlay: rgba(0, 0, 0, 0.9);
+  --overlay-background: rgba(12, 12, 12, 0.2);
+
+  /* Opacity */
+  --muted-opacity: 0.7;
 }
 
 body {
