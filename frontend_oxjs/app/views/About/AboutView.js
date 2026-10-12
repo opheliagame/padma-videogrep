@@ -14,6 +14,7 @@ export function createAboutView({
   const header = createHeader({
     mode,
     screenplayName,
+    modeLabel: "Write",
     onModeToggle:
       typeof navigate === "function" ? () => navigate("/write") : undefined,
   });

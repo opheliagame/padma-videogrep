@@ -29,7 +29,7 @@ describe("createAboutView", () => {
 
     homeLink.click();
     modeButton.click();
-    expect(navigate.mock.calls).toEqual([["/"], ["/watch"]]);
+    expect(navigate.mock.calls).toEqual([["/"], ["/write"]]);
 
     view.destroy();
     homeLink.click();

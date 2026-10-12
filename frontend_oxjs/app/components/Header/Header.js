@@ -10,6 +10,8 @@ const headerCleanup = new WeakMap();
 export function createHeader({
   mode = "write",
   screenplayName = "",
+  aboutHref,
+  modeLabel,
   onTitleChange,
   onModeToggle,
 } = {}) {
@@ -32,7 +34,14 @@ export function createHeader({
 
   var brand = document.createElement("span");
   brand.className = "headerBrand";
-  brand.textContent = "padma videogrep";
+  brand.textContent = "pad.ma videogrep";
+  if (aboutHref) {
+    var aboutLink = document.createElement("a");
+    aboutLink.className = "headerLink";
+    aboutLink.href = aboutHref;
+    aboutLink.textContent = "about";
+    brand.append("・", aboutLink);
+  }
   leftSection.append(brand);
 
   var centerSection = document.createElement("div");
@@ -101,7 +110,7 @@ export function createHeader({
   var modeButton = document.createElement("button");
   modeButton.type = "button";
   modeButton.className = "headerModeButton playButton";
-  modeButton.textContent = isPlayMode ? "Write" : "Play";
+  modeButton.textContent = modeLabel || (isPlayMode ? "Write" : "Play");
   modeButton.setAttribute("aria-pressed", String(isPlayMode));
   listen(modeButton, "click", function () {
     if (typeof onModeToggle === "function") {
