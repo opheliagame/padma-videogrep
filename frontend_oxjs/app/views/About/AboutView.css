@@ -1,5 +1,10 @@
 .aboutView {
-  min-height: 100%;
+  /* OxJS sets body to overflow: hidden and user-select: none */
+  height: 100vh;
+  overflow-y: auto;
+  -webkit-user-select: text;
+  user-select: text;
+  cursor: auto;
   display: flex;
   flex-direction: column;
 }
@@ -17,8 +22,14 @@
   text-transform: uppercase;
 }
 
-.aboutView__title {
-  max-width: 12ch;
+.aboutView__content {
+  max-width: 64ch;
+  color: var(--text-regular);
+  font-size: 16px;
+  line-height: 1.6;
+}
+
+.aboutView__content h1 {
   margin: 0 0 24px;
   color: var(--ink);
   font-size: 48px;
@@ -26,12 +37,58 @@
   line-height: 1.08;
 }
 
-.aboutView__description {
-  max-width: 64ch;
-  margin: 0;
-  color: var(--text-regular);
+.aboutView__content h2 {
+  margin: 48px 0 12px;
+  color: var(--ink);
+  font-size: 28px;
+  font-weight: 400;
+}
+
+.aboutView__content h3 {
+  margin: 32px 0 8px;
+  color: var(--ink);
   font-size: 18px;
-  line-height: 1.7;
+  font-weight: 600;
+}
+
+.aboutView__content p {
+  margin: 0 0 16px;
+}
+
+.aboutView__content ol,
+.aboutView__content ul {
+  margin: 0 0 16px;
+  padding-left: 1.4em;
+}
+
+.aboutView__content li + li {
+  margin-top: 4px;
+}
+
+.aboutView__content table {
+  width: 100%;
+  margin: 8px 0 16px;
+  border-collapse: collapse;
+}
+
+.aboutView__content th,
+.aboutView__content td {
+  padding: 6px 12px 6px 0;
+  border-bottom: 1px solid var(--gray-3);
+  text-align: left;
+  vertical-align: top;
+}
+
+.aboutView__content code {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 0.9em;
+  white-space: nowrap;
+}
+
+.aboutView__content a {
+  color: var(--primary-blue);
+  text-underline-offset: 4px;
+  overflow-wrap: anywhere;
 }
 
 .aboutView__actions {
@@ -56,7 +113,7 @@
     padding: 48px 0;
   }
 
-  .aboutView__title {
+  .aboutView__content h1 {
     font-size: 36px;
   }
 }

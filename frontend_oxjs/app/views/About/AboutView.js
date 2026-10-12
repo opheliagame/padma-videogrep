@@ -1,4 +1,6 @@
+import { marked } from "marked";
 import { createHeader, destroyHeader } from "../../components/Header/Header.js";
+import aboutMarkdown from "./about.md?raw";
 import "./AboutView.css";
 
 /**
@@ -31,15 +33,14 @@ export function createAboutView({
   eyebrow.className = "aboutView__eyebrow";
   eyebrow.textContent = "About this project";
 
-  const title = document.createElement("h1");
-  title.id = "aboutViewTitle";
-  title.className = "aboutView__title";
-  title.textContent = "Stories change how we see things.";
-
-  const description = document.createElement("p");
-  description.className = "aboutView__description";
-  description.textContent =
-    "This project explores how a single object or idea can evoke different feelings and thoughts in different people. It asks whether we can understand something through the stories told about it, the context it lives in, and the company it keeps.";
+  const content = document.createElement("div");
+  content.className = "aboutView__content";
+  // about.md is bundled with the app, not user input, so rendering it as HTML is safe
+  content.innerHTML = marked.parse(aboutMarkdown);
+  const title = content.querySelector("h1");
+  if (title) {
+    title.id = "aboutViewTitle";
+  }
 
   const actions = document.createElement("nav");
   actions.className = "aboutView__actions";
@@ -67,7 +68,7 @@ export function createAboutView({
   homeLink.addEventListener("click", handleHomeNavigation);
 
   actions.append(homeLink, essayLink);
-  main.append(eyebrow, title, description, actions);
+  main.append(eyebrow, content, actions);
   element.append(main);
 
   return {
