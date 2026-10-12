@@ -177,10 +177,17 @@ window.APIService = {
           mediaUrl: mediaUrl,
           in: i.in,
           out: i.out,
-          transcript: i.annotations[0]?.value || "",
+          transcript: (i.annotations || [])
+            .map(function (annotation) {
+              return annotation.value;
+            })
+            .filter(Boolean)
+            .join("\n\n"),
           title: i.title,
+          source: i.source,
+          date: i.date,
           largeTimelineUrl: timelineUrl,
-          annotations: i.annotations.map(function (a) {
+          annotations: (i.annotations || []).map(function (a) {
             return {
               in: i.in,
               out: i.out,

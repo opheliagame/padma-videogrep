@@ -1,0 +1,128 @@
+.clipTimeline {
+  position: absolute;
+  z-index: 4;
+  right: 16px;
+  bottom: 16px;
+  left: 16px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  align-items: end;
+  gap: 7px 22px;
+  color: #fff;
+  background: transparent !important;
+}
+
+.clipTimeline__summary {
+  color: #fff !important;
+  background: transparent !important;
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.clipTimeline__summary {
+  justify-self: end;
+  color: rgba(255, 255, 255, 0.72) !important;
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+.clipTimeline__track {
+  display: grid;
+  grid-column: 1 / -1;
+  gap: 1px;
+  min-width: 0;
+  height: 72px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  overscroll-behavior-x: contain;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.6) transparent;
+  background: transparent !important;
+}
+
+.clipTimeline__section {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 0;
+  min-width: 0;
+  padding: 10px 0;
+  overflow: hidden;
+  outline: 1px solid rgba(255, 255, 255, 0.72);
+  border-radius: 0;
+  color: #fff !important;
+  text-align: left;
+  cursor: pointer;
+  background: var(--overlay-background) !important;
+  backdrop-filter: blur(3px);
+  transition:
+    background-color 140ms ease,
+    border-color 140ms ease;
+}
+
+.clipTimeline__section:hover,
+.clipTimeline__section:focus-visible {
+  border-color: #fff;
+  outline: none;
+  background: rgba(255, 255, 255, 0.14) !important;
+}
+
+.clipTimeline__section.is-active {
+  border-color: #fff;
+  background: rgba(255, 255, 255, 0.2) !important;
+}
+
+.clipTimeline__number,
+.clipTimeline__label,
+.clipTimeline__duration {
+  min-width: 0;
+  margin-inline: 6px;
+  overflow: hidden;
+  color: #fff !important;
+  background: transparent !important;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.clipTimeline__number,
+.clipTimeline__duration {
+  color: rgba(255, 255, 255, 0.72) !important;
+  font-size: 11px;
+  font-variant-numeric: tabular-nums;
+}
+
+.clipTimeline__label {
+  grid-column: 1 / -1;
+  grid-row: 2;
+  min-width: 0;
+  font-size: 14px;
+}
+
+@media (max-width: 640px) {
+  .clipTimeline {
+    right: 8px;
+    bottom: 8px;
+    left: 8px;
+    gap: 6px 12px;
+  }
+
+  .clipTimeline__track {
+    height: 58px;
+    gap: 4px;
+  }
+
+  .clipTimeline__section {
+    grid-template-columns: minmax(0, 1fr);
+    padding: 8px 0;
+  }
+
+  .clipTimeline__duration {
+    display: none;
+  }
+
+  .clipTimeline__label {
+    font-size: 12px;
+  }
+}

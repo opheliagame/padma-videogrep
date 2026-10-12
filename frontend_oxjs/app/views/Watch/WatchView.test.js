@@ -1,10 +1,14 @@
 // @vitest-environment jsdom
 
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { fetchClips } from "../../components/ui.js";
+import { fetchClips, playClips } from "../../components/ui.js";
+import { updateClipTimeline } from "../../components/ClipTimeline/ClipTimeline.js";
 import { createWatchView } from "./WatchView.js";
 
-vi.mock("../../components/ui.js", () => ({ fetchClips: vi.fn() }));
+vi.mock("../../components/ui.js", () => ({
+  fetchClips: vi.fn(),
+  playClips: vi.fn(),
+}));
 
 function createOxElement() {
   return {
@@ -60,61 +64,62 @@ describe("createWatchView", () => {
 
   it("builds a page with a header and video, scene, and metadata panels", () => {
     vi.useFakeTimers();
-    const splitPanel = createOxElement();
-    const splitPanelConfig = vi.fn(() => splitPanel);
-    globalThis.Ox = {
-      Element: createOxElement,
-      SplitPanel: splitPanelConfig,
-    };
+    globalThis.Ox = { Element: createOxElement };
     const app = createApp();
     const onModeToggle = vi.fn();
 
     const view = createWatchView({ app, onModeToggle });
-    const [middleSection, bottomSection] =
-      splitPanelConfig.mock.calls[0][0].elements;
-    const sceneList = bottomSection.element.children[0].children[0].children[1];
+    const stage = view.element.children[0];
+    const [headerSection, middleSection, metadataPanel] = stage.children;
 
-    expect(view.element).toBe(splitPanel);
-    expect(splitPanelConfig.mock.calls[0][0].orientation).toBe("vertical");
-    expect(middleSection.element.classes).toContain(
-      "playSectionMiddle playmode",
-    );
-    expect(sceneList.children).toHaveLength(2);
+    expect(view.element.classes).toContain("watchPage");
+    expect(stage.classes).toContain("watchStage");
+    expect(middleSection.classes).toContain("playSectionMiddle");
     expect(app.data.screenplay.scenes[0].ast).toEqual({
       type: "KEYWORD",
       value: "water",
     });
-    expect(sceneList.children[0].children[1].content).toBe("water");
-    expect(sceneList.children[1].children[1].content).toBe("night train");
-    expect(app.$ui.$playVideoContainer).toBe(middleSection.element);
-    expect(app.$ui.$clipMetadata.classes).toContain(
-      "playClipMetadata playmode",
+    expect(app.$ui.$playVideoContainer).toBe(middleSection);
+    expect(metadataPanel.children[0].classes).toContain("playClipMetadata");
+    expect(stage.children[3].children[0].className).toBe("clipTimeline");
+    const modeButton = headerSection.children[0].querySelector(
+      ".watchSceneHeading__modeButton",
     );
-    const pageConfig = splitPanelConfig.mock.calls[1][0];
-    expect(pageConfig.orientation).toBe("vertical");
-    expect(pageConfig.elements[0].size).toBe(80);
-    expect(pageConfig.elements[1].element).toBe(splitPanel);
-    const modeButton =
-      pageConfig.elements[0].element.children[0].querySelector(
-        ".headerModeButton",
-      );
     expect(modeButton.textContent).toBe("Write");
     modeButton.click();
     expect(onModeToggle).toHaveBeenCalledOnce();
+
+    const clips = [{ title: "Water section", in: 0, out: 12 }];
+    app.$ui.$clips = clips;
+    updateClipTimeline(app.$ui.$clipTimeline, clips);
+    app.$ui.$clipTimeline.querySelector("button").click();
+    expect(playClips).toHaveBeenCalledWith(app, clips, 0, expect.any(Object));
+    const playbackOptions = playClips.mock.calls[0][3];
+    playbackOptions.onClipChange({ sceneIndex: 1, sceneQuery: "night train" });
+    const header = headerSection.children[0];
+    expect(header.querySelector(".watchSceneHeading__scene").textContent).toBe(
+      "scene 2",
+    );
+    expect(header.querySelector(".watchSceneHeading__title").textContent).toBe(
+      "night train",
+    );
+
     vi.advanceTimersByTime(50);
     expect(fetchClips).toHaveBeenCalledOnce();
-    expect(fetchClips).toHaveBeenCalledWith(app);
+    expect(fetchClips).toHaveBeenCalledWith(app, playbackOptions);
     view.destroy();
     modeButton.click();
     expect(onModeToggle).toHaveBeenCalledOnce();
+    expect(app.$ui.$clipTimeline).toBeNull();
+    playbackOptions.onClipChange({ sceneIndex: 0, sceneQuery: "water" });
+    expect(header.querySelector(".watchSceneHeading__scene").textContent).toBe(
+      "scene 2",
+    );
   });
 
   it("clears its app references on destroy without clearing replacements", () => {
     vi.useFakeTimers();
-    globalThis.Ox = {
-      Element: createOxElement,
-      SplitPanel: () => createOxElement(),
-    };
+    globalThis.Ox = { Element: createOxElement };
     const app = createApp();
     const view = createWatchView({ app });
 

@@ -1,0 +1,44 @@
+.clipMetadata {
+  width: 100%;
+  overflow-wrap: anywhere;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.clipMetadata__title {
+  margin: 0 0 12px;
+  font-size: 14px;
+  font-style: italic;
+  font-weight: 400;
+}
+
+.clipMetadata__details {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 4px 12px;
+  margin: 0 0 18px;
+}
+
+.clipMetadata__details dt,
+.clipMetadata__details dd {
+  float: none;
+  clear: none;
+  width: auto;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  font-weight: inherit;
+  text-overflow: clip;
+}
+
+.clipMetadata__label {
+  margin: 0 0 8px;
+  font-size: 12px;
+  font-weight: 400;
+}
+
+.clipMetadata__transcript {
+  margin: 0;
+  white-space: pre-wrap;
+  font-style: italic;
+}

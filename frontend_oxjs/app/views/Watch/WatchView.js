@@ -1,5 +1,13 @@
-import { createHeader, destroyHeader } from "../../components/Header/Header.js";
-import { fetchClips } from "../../components/ui.js";
+import {
+  createWatchSceneHeading,
+  destroyWatchSceneHeading,
+  updateWatchSceneHeading,
+} from "../../components/WatchSceneHeading/WatchSceneHeading.js";
+import { fetchClips, playClips } from "../../components/ui.js";
+import {
+  createClipTimeline,
+  destroyClipTimeline,
+} from "../../components/ClipTimeline/ClipTimeline.js";
 import { initializeScenes } from "../sceneData.js";
 import "./WatchView.css";
 
@@ -8,84 +16,78 @@ import "./WatchView.css";
  * @param {{ app: Object }} context
  * @returns {{ element: Object, destroy: () => void }}
  */
-export function createWatchView({ app, onModeToggle, onTitleChange }) {
+export function createWatchView({ app, onModeToggle }) {
   initializeScenes(app);
 
-  const header = createHeader({
-    mode: "play",
-    screenplayName: app.data.screenplay.name,
-    currentScene: app.state.currentScene,
+  const activeScene = app.data.screenplay.scenes[0] || {};
+  const heading = createWatchSceneHeading({
+    index: 0,
+    query: activeScene.queryText || "",
     onModeToggle,
-    onTitleChange,
   });
-  const headerSection = Ox.Element().append(header);
+  const headerSection = Ox.Element()
+    .addClass("watchStage__header")
+    .append(heading);
+  let isMounted = true;
+  const playbackOptions = {
+    onClipChange(clip) {
+      if (!isMounted) return;
+      const index = clip.sceneIndex ?? 0;
+      const scene = app.data.screenplay.scenes[index] || {};
+      updateWatchSceneHeading(heading, {
+        index,
+        query: clip.sceneQuery ?? scene.queryText ?? "",
+      });
+    },
+  };
 
-  const middleSection = Ox.Element().addClass("playSectionMiddle playmode");
+  const page = Ox.Element().addClass("watchPage");
+  const stage = Ox.Element().addClass("watchStage");
+  const middleSection = Ox.Element().addClass("playSectionMiddle");
   app.$ui.$playVideoContainer = middleSection;
 
-  const bottomSection = Ox.Element().addClass("playSectionBottom playmode");
-  const bottomContent = Ox.Element()
-    .addClass("playBottomContent playmode")
-    .appendTo(bottomSection);
-
-  const scenePanel = Ox.Element()
-    .addClass("playScenePanel playmode")
-    .appendTo(bottomContent);
-  Ox.Element().addClass("sceneHeader").html("Scenes").appendTo(scenePanel);
-
-  const sceneList = Ox.Element()
-    .addClass("playSceneList playmode")
-    .appendTo(scenePanel);
-
-  app.data.screenplay.scenes.forEach((scene, index) => {
-    const sceneItem = Ox.Element().addClass("playSceneItem playmode");
-    Ox.Element()
-      .addClass("sceneLabel")
-      .html("scene " + (index + 1))
-      .appendTo(sceneItem);
-
-    const queryText =
-      scene.queryText ||
-      (scene.grammars || []).map((grammar) => grammar.name).join(" ");
-    Ox.Element()
-      .addClass("playSceneQuery playmode")
-      .html(queryText)
-      .appendTo(sceneItem);
-
-    sceneList.append(sceneItem);
-  });
-
-  const metadataPanel = Ox.Element()
-    .addClass("playMetadataPanel playmode")
-    .appendTo(bottomContent);
+  const metadataPanel = Ox.Element().addClass("watchStage__metadata");
   const clipMetadata = Ox.Element()
-    .addClass("playClipMetadata playmode")
+    .addClass("playClipMetadata")
     .appendTo(metadataPanel);
   app.$ui.$clipMetadata = clipMetadata;
 
-  const content = Ox.SplitPanel({
-    elements: [
-      { element: middleSection, resize: [200, 400, 600] },
-      { element: bottomSection, size: 200 },
-    ],
-    orientation: "vertical",
-  }).addClass("playSplitPanel playmode");
-  const element = Ox.SplitPanel({
-    elements: [{ element: headerSection, size: 80 }, { element: content }],
-    orientation: "vertical",
+  const timeline = createClipTimeline({
+    onSelect(index) {
+      if (app.$ui.$clips) {
+        playClips(app, app.$ui.$clips, index, playbackOptions);
+      }
+    },
   });
-  const fetchTimeout = setTimeout(() => fetchClips(app), 50);
+  app.$ui.$clipTimeline = timeline;
+  const timelinePanel = Ox.Element()
+    .addClass("watchStage__timeline")
+    .append(timeline);
+
+  stage
+    .append(headerSection)
+    .append(middleSection)
+    .append(metadataPanel)
+    .append(timelinePanel);
+  page.append(stage);
+
+  const fetchTimeout = setTimeout(() => fetchClips(app, playbackOptions), 50);
 
   return {
-    element,
+    element: page,
     destroy() {
+      isMounted = false;
       clearTimeout(fetchTimeout);
-      destroyHeader(header);
+      destroyWatchSceneHeading(heading);
+      destroyClipTimeline(timeline);
       if (app.$ui.$playVideoContainer === middleSection) {
         app.$ui.$playVideoContainer = null;
       }
       if (app.$ui.$clipMetadata === clipMetadata) {
         app.$ui.$clipMetadata = null;
+      }
+      if (app.$ui.$clipTimeline === timeline) {
+        app.$ui.$clipTimeline = null;
       }
     },
   };

@@ -1,8 +1,10 @@
 /**
  * Playback actions shared by the Write and Watch pages.
  */
+import { updateClipTimeline } from "./ClipTimeline/ClipTimeline.js";
+import { createClipMetadata } from "./ClipMetadata/ClipMetadata.js";
 
-export function fetchClips(app) {
+export function fetchClips(app, playbackOptions = {}) {
   console.log("Fetching clips...");
   console.log("Current containers:", {
     container: app.$ui.$playVideoContainer,
@@ -22,7 +24,15 @@ export function fetchClips(app) {
     // Use AST-based query if available
     if (scene.ast) {
       APIService.findClipsByAST(app, scene.ast, function (clips) {
-        allClips = allClips.concat(clips);
+        allClips = allClips.concat(
+          clips.map((clip) => ({
+            ...clip,
+            sceneIndex,
+            sceneQuery:
+              scene.queryText ||
+              (scene.grammars || []).map((grammar) => grammar.name).join(" "),
+          })),
+        );
         processedScenes++;
         console.log(
           "Scene " +
@@ -36,8 +46,10 @@ export function fetchClips(app) {
         if (processedScenes === scenes.length) {
           console.log("All clips fetched:", allClips);
           if (allClips.length > 0) {
-            playClips(app, allClips);
+            playClips(app, allClips, 0, playbackOptions);
           } else {
+            app.$ui.$clips = [];
+            updateClipTimeline(app.$ui.$clipTimeline, []);
             console.warn("No clips found from any scene");
           }
         }
@@ -50,8 +62,10 @@ export function fetchClips(app) {
       if (processedScenes === scenes.length) {
         console.log("All clips fetched:", allClips);
         if (allClips.length > 0) {
-          playClips(app, allClips);
+          playClips(app, allClips, 0, playbackOptions);
         } else {
+          app.$ui.$clips = [];
+          updateClipTimeline(app.$ui.$clipTimeline, []);
           console.warn("No clips found from any scene");
         }
       }
@@ -59,26 +73,37 @@ export function fetchClips(app) {
   });
 }
 
-export function playClips(app, items) {
+export function playClips(
+  app,
+  items,
+  clipIndex = app.data.currentIndex,
+  playbackOptions = {},
+) {
   if (!items || items.length === 0) {
+    updateClipTimeline(app.$ui.$clipTimeline, []);
     console.error("No items to play");
     return;
   }
 
-  if (app.data.currentIndex >= items.length) {
+  if (clipIndex >= items.length) {
     console.log("All clips played");
     app.data.currentIndex = 0;
+    updateClipTimeline(app.$ui.$clipTimeline, items, 0);
     return;
   }
 
-  console.log("Playing clip " + (app.data.currentIndex + 1));
-  var clip = items[app.data.currentIndex];
+  app.data.currentIndex = clipIndex;
+  app.$ui.$clips = items;
+  updateClipTimeline(app.$ui.$clipTimeline, items, clipIndex);
+  console.log("Playing clip " + (clipIndex + 1));
+  var clip = items[clipIndex];
 
   // Ensure containers exist
   if (!app.$ui.$playVideoContainer) {
     console.error("Play video container not found");
     return;
   }
+  playbackOptions.onClipChange?.(clip);
 
   // Clear previous video
   app.$ui.$playVideoContainer.find("video").remove();
@@ -111,8 +136,7 @@ export function playClips(app, items) {
     ended: function () {
       console.log("Video ended");
       Ox.$(video).remove();
-      app.data.currentIndex++;
-      playClips(app, items);
+      playClips(app, items, clipIndex + 1, playbackOptions);
     },
   });
 
@@ -124,25 +148,7 @@ export function playClips(app, items) {
 
   // Update metadata
   if (app.$ui.$clipMetadata) {
-    var metadata = Ox.Element().addClass("playClipMetadata");
-
-    var textDiv = Ox.Element()
-      .addClass("metadata-text")
-      .html(clip.title || "")
-      .appendTo(metadata);
-
-    var infoDiv = Ox.Element()
-      .addClass("metadata-info")
-      .html(
-        (clip.source ? clip.source : "Interview") +
-          "<br/>" +
-          (clip.date
-            ? clip.date
-            : new Date().toISOString().split("T")[0].replace(/-/g, "/")),
-      )
-      .appendTo(metadata);
-
-    app.$ui.$clipMetadata.empty().append(metadata);
+    app.$ui.$clipMetadata.empty().append(createClipMetadata({ clip }));
   }
 
   video.playInToOut();

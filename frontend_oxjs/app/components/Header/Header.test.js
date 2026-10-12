@@ -18,15 +18,18 @@ describe("createHeader", () => {
     expect(header.querySelector(".headerModeButton").textContent).toBe("Play");
   });
 
-  it("renders play scene text without interpreting it as markup", () => {
+  it("renders the project title in play mode without scene-specific content", () => {
     const header = createHeader({
       mode: "play",
-      currentScene: { index: 1, query: "<img src=x onerror=alert(1)>" },
+      screenplayName: "<img src=x onerror=alert(1)>",
     });
 
     expect(header.classList.contains("playmode")).toBe(true);
-    expect(header.querySelector(".headerBrand").textContent).toBe("scene 2");
-    expect(header.querySelector(".headerQuery").textContent).toBe(
+    expect(header.querySelector(".headerBrand").textContent).toBe(
+      "padma videogrep",
+    );
+    expect(header.querySelector(".headerQuery")).toBeNull();
+    expect(header.querySelector(".headerTitleDisplay").textContent).toBe(
       "<img src=x onerror=alert(1)>",
     );
     expect(header.querySelector("img")).toBeNull();

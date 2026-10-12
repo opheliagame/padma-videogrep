@@ -10,12 +10,10 @@ const headerCleanup = new WeakMap();
 export function createHeader({
   mode = "write",
   screenplayName = "",
-  currentScene = null,
   onTitleChange,
   onModeToggle,
 } = {}) {
   var isPlayMode = mode === "play";
-  var showScene = isPlayMode && currentScene;
   var header = document.createElement("header");
   var listeners = [];
 
@@ -34,79 +32,68 @@ export function createHeader({
 
   var brand = document.createElement("span");
   brand.className = "headerBrand";
-  brand.textContent = showScene
-    ? "scene " + ((currentScene.index || 0) + 1)
-    : "padma videogrep";
+  brand.textContent = "padma videogrep";
   leftSection.append(brand);
 
   var centerSection = document.createElement("div");
-  centerSection.className = showScene
-    ? "headerCenter"
-    : "headerCenter headerTitleEditable";
+  centerSection.className = "headerCenter headerTitleEditable";
 
-  if (showScene) {
-    var queryTitle = document.createElement("h1");
-    queryTitle.className = "headerTitle headerQuery";
-    queryTitle.textContent = currentScene.query || currentScene.queryText || "";
-    centerSection.append(queryTitle);
-  } else {
-    var titleDisplay = document.createElement("button");
-    titleDisplay.type = "button";
-    titleDisplay.className = "headerTitleDisplay";
-    titleDisplay.textContent = screenplayName;
-    titleDisplay.setAttribute("aria-expanded", "false");
-    titleDisplay.setAttribute("aria-controls", "headerTitleInput");
+  var titleDisplay = document.createElement("button");
+  titleDisplay.type = "button";
+  titleDisplay.className = "headerTitleDisplay";
+  titleDisplay.textContent = screenplayName;
+  titleDisplay.setAttribute("aria-expanded", "false");
+  titleDisplay.setAttribute("aria-controls", "headerTitleInput");
 
-    var titleInput = document.createElement("input");
-    titleInput.type = "text";
-    titleInput.id = "headerTitleInput";
-    titleInput.className = "headerTitleInput";
-    titleInput.value = screenplayName;
-    titleInput.setAttribute("aria-label", "Screenplay title");
-    titleInput.setAttribute("aria-hidden", "true");
-    titleInput.hidden = true;
+  var titleInput = document.createElement("input");
+  titleInput.type = "text";
+  titleInput.id = "headerTitleInput";
+  titleInput.className = "headerTitleInput";
+  titleInput.value = screenplayName;
+  titleInput.setAttribute("aria-label", "Screenplay title");
+  titleInput.setAttribute("aria-hidden", "true");
+  titleInput.hidden = true;
 
-    var setEditing = function (editing) {
-      titleDisplay.hidden = editing;
-      titleDisplay.setAttribute("aria-expanded", String(editing));
-      titleInput.hidden = !editing;
-      titleInput.setAttribute("aria-hidden", String(!editing));
-      if (editing) {
-        titleInput.focus();
-        titleInput.select();
+  var setEditing = function (editing) {
+    titleDisplay.hidden = editing;
+    titleDisplay.setAttribute("aria-expanded", String(editing));
+    titleInput.hidden = !editing;
+    titleInput.setAttribute("aria-hidden", String(!editing));
+    if (editing) {
+      titleInput.focus();
+      titleInput.select();
+    }
+  };
+
+  var saveTitle = function () {
+    var newName = titleInput.value.trim();
+    if (newName) {
+      var previousName = titleDisplay.textContent;
+      titleDisplay.textContent = newName;
+      if (newName !== previousName && typeof onTitleChange === "function") {
+        onTitleChange(newName);
       }
-    };
+    } else {
+      titleInput.value = titleDisplay.textContent;
+    }
+    setEditing(false);
+  };
 
-    var saveTitle = function () {
-      var newName = titleInput.value.trim();
-      if (newName) {
-        var previousName = titleDisplay.textContent;
-        titleDisplay.textContent = newName;
-        if (newName !== previousName && typeof onTitleChange === "function") {
-          onTitleChange(newName);
-        }
-      } else {
-        titleInput.value = titleDisplay.textContent;
-      }
+  listen(titleDisplay, "click", function () {
+    setEditing(true);
+  });
+  listen(titleInput, "blur", saveTitle);
+  listen(titleInput, "keydown", function (event) {
+    if (event.key === "Enter") {
+      event.preventDefault();
+      saveTitle();
+    } else if (event.key === "Escape") {
+      titleInput.value = titleDisplay.textContent;
       setEditing(false);
-    };
+    }
+  });
 
-    listen(titleDisplay, "click", function () {
-      setEditing(true);
-    });
-    listen(titleInput, "blur", saveTitle);
-    listen(titleInput, "keydown", function (event) {
-      if (event.key === "Enter") {
-        event.preventDefault();
-        saveTitle();
-      } else if (event.key === "Escape") {
-        titleInput.value = titleDisplay.textContent;
-        setEditing(false);
-      }
-    });
-
-    centerSection.append(titleDisplay, titleInput);
-  }
+  centerSection.append(titleDisplay, titleInput);
 
   var rightSection = document.createElement("div");
   rightSection.className = "headerRight";
