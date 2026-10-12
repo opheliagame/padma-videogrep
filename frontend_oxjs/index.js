@@ -9,6 +9,14 @@ const API_URL = import.meta.env.DEV
   ? `https://corsproxy.io/?key=${import.meta.env.VITE_CORS_PROXY_KEY}&url=${encodeURIComponent("https://pad.ma/api")}`
   : "https://pad.ma/api";
 
+// "/padma-videogrep" in production, "" in dev
+const BASE_PATH = import.meta.env.BASE_URL.replace(/\/$/, "");
+
+const currentRoute = () =>
+  window.location.pathname.slice(BASE_PATH.length).replace(/(.)\/$/, "$1") ||
+  "/";
+const routeUrl = (route) => BASE_PATH + route;
+
 window.onerror = function (error, url) {
   if (!url) {
     console.error("Error loading application:", error);
@@ -57,7 +65,7 @@ Ox.load(function () {
     },
 
     modeFromLocation: function () {
-      var currentPath = window.location.pathname.replace(/\/+$/, "") || "/";
+      var currentPath = currentRoute();
       if (currentPath === "/watch") {
         return "play";
       }
@@ -69,7 +77,7 @@ Ox.load(function () {
 
     load: function (browserSupported) {
       app.state.mode = app.modeFromLocation();
-      var currentPath = window.location.pathname.replace(/\/+$/, "") || "/";
+      var currentPath = currentRoute();
       if (currentPath === "/about") {
         app.$ui.aboutView = createAboutView({
           mode: app.state.mode,
@@ -79,7 +87,7 @@ Ox.load(function () {
               app.$ui.aboutView.destroy();
               app.$ui.aboutView = null;
             }
-            window.location.assign(path);
+            window.location.assign(routeUrl(path));
           },
         });
         document.body.appendChild(app.$ui.aboutView.element);
@@ -135,12 +143,12 @@ Ox.load(function () {
       console.log("Mode toggled to:", app.state.mode);
 
       var newPath = app.state.mode === "play" ? "/watch" : "/write";
-      window.history.pushState({ mode: app.state.mode }, "", newPath);
+      window.history.pushState({ mode: app.state.mode }, "", routeUrl(newPath));
       app.ui.renderModePage();
     },
 
     handlePopState: function () {
-      var currentPath = window.location.pathname.replace(/\/+$/, "") || "/";
+      var currentPath = currentRoute();
       if (currentPath === "/about") {
         window.location.reload();
         return;

@@ -16,6 +16,8 @@ function copyRuntimeFiles() {
       outDir = config.build.outDir;
     },
     closeBundle() {
+      // GitHub Pages serves 404.html for unknown paths, so deep links like /write load the app
+      cpSync(resolve(outDir, "index.html"), resolve(outDir, "404.html"));
       cpSync(resolve(root, "min"), resolve(outDir, "min"), {
         recursive: true,
       });
@@ -28,10 +30,10 @@ function copyRuntimeFiles() {
   };
 }
 
-export default defineConfig({
-  base: "./",
+export default defineConfig(({ command }) => ({
+  base: command === "build" ? "/padma-videogrep/" : "/",
   plugins: [copyRuntimeFiles()],
   build: {
     outDir: "build",
   },
-});
+}));
