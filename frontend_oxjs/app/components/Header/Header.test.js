@@ -10,7 +10,7 @@ describe("createHeader", () => {
     expect(header.tagName).toBe("HEADER");
     expect(header.getAttribute("role")).toBe("banner");
     expect(header.querySelector(".headerBrand").textContent).toBe(
-      "padma videogrep",
+      "pad.ma videogrep",
     );
     expect(header.querySelector(".headerTitleDisplay").textContent).toBe(
       "Water",
@@ -26,7 +26,7 @@ describe("createHeader", () => {
 
     expect(header.classList.contains("playmode")).toBe(true);
     expect(header.querySelector(".headerBrand").textContent).toBe(
-      "padma videogrep",
+      "pad.ma videogrep",
     );
     expect(header.querySelector(".headerQuery")).toBeNull();
     expect(header.querySelector(".headerTitleDisplay").textContent).toBe(
@@ -58,6 +58,18 @@ describe("createHeader", () => {
     expect(titleButton.textContent).toBe("New title");
     expect(titleButton.getAttribute("aria-expanded")).toBe("false");
     expect(titleInput.getAttribute("aria-hidden")).toBe("true");
+  });
+
+  it("links to the about page and accepts a custom mode label", () => {
+    const header = createHeader({ aboutHref: "/about", modeLabel: "Write" });
+
+    expect(header.querySelector(".headerBrand").textContent).toBe(
+      "pad.ma videogrep・about",
+    );
+    expect(header.querySelector(".headerLink").getAttribute("href")).toBe(
+      "/about",
+    );
+    expect(header.querySelector(".headerModeButton").textContent).toBe("Write");
   });
 
   it("calls the mode callback and removes listeners on destroy", () => {
