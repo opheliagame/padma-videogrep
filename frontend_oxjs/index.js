@@ -169,6 +169,7 @@ Ox.load(function () {
           app.state.mode === "play" ? createWatchView : createWriteView;
         app.$ui.activePage = createPage({
           app: app,
+          homeHref: routeUrl("/"),
           aboutHref: routeUrl("/about"),
           onModeToggle: app.toggleMode,
           onTitleChange: function (newName) {
