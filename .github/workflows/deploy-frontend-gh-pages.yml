@@ -1,4 +1,4 @@
-name: Deploy to GH Pages
+name: Deploy Frontend to GH Pages
 
 on:
   workflow_dispatch:
