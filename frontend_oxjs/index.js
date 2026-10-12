@@ -1,4 +1,5 @@
 import { createAboutView } from "./app/views/About/AboutView.js";
+import { createLandingView } from "./app/views/Landing/LandingView.js";
 import { createWatchView } from "./app/views/Watch/WatchView.js";
 import { createWriteView } from "./app/views/Write/WriteView.js";
 import { storageManager } from "./app/core/Storage/StorageManager.js";
@@ -84,10 +85,25 @@ Ox.load(function () {
         return;
       }
 
+      if (currentPath === "/") {
+        app.$ui.landingView = createLandingView({
+          onExited: function () {
+            app.$ui.landingView.destroy();
+            app.$ui.landingView = null;
+          },
+        });
+        document.body.appendChild(app.$ui.landingView.element);
+      }
+
       app.api = Ox.API({ url: API_URL }, function () {
         console.log("API initialized");
 
         app.ui.renderModePage();
+        if (app.$ui.landingView) {
+          // renderModePage empties the body, so put the landing back on top before fading
+          document.body.appendChild(app.$ui.landingView.element);
+          app.$ui.landingView.exit();
+        }
         app.state.loaded = true;
         window.addEventListener("popstate", app.handlePopState);
 
