@@ -12,6 +12,7 @@ export function createHeader({
   screenplayName = "",
   homeHref,
   aboutHref,
+  guideHref,
   modeLabel,
   onTitleChange,
   onModeToggle,
@@ -50,6 +51,13 @@ export function createHeader({
     aboutLink.href = aboutHref;
     aboutLink.textContent = "about";
     brand.append("・", aboutLink);
+  }
+  if (guideHref) {
+    var guideLink = document.createElement("a");
+    guideLink.className = "headerLink";
+    guideLink.href = guideHref;
+    guideLink.textContent = "guide";
+    brand.append("・", guideLink);
   }
   leftSection.append(brand);
 

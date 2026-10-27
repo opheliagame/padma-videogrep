@@ -54,7 +54,12 @@ describe("createWriteView", () => {
     };
     const onModeToggle = vi.fn();
 
-    const view = createWriteView({ app, onModeToggle });
+    const view = createWriteView({
+      app,
+      aboutHref: "/about",
+      guideHref: "/guide",
+      onModeToggle,
+    });
 
     expect(view.element).toBe(page);
     expect(contentPanel.classes).toContain("writeLeftPanel");
@@ -78,12 +83,16 @@ describe("createWriteView", () => {
     expect(
       pageConfig.elements[0].element.children[0].getAttribute("role"),
     ).toBe("banner");
+    const header = pageConfig.elements[0].element.children[0];
+    expect(
+      [...header.querySelectorAll(".headerLink")].map((link) =>
+        link.getAttribute("href"),
+      ),
+    ).toEqual(["/about", "/guide"]);
     expect(pageConfig.elements[1].element).toBe(contentPanel);
 
     const modeButton =
-      pageConfig.elements[0].element.children[0].querySelector(
-        ".headerModeButton",
-      );
+      header.querySelector(".headerModeButton");
     modeButton.click();
     expect(onModeToggle).toHaveBeenCalledOnce();
     view.destroy();

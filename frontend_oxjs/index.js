@@ -1,4 +1,5 @@
 import { createAboutView } from "./app/views/About/AboutView.js";
+import { createGuideView } from "./app/views/Guide/GuideView.js";
 import { createLandingView } from "./app/views/Landing/LandingView.js";
 import { createWatchView } from "./app/views/Watch/WatchView.js";
 import { createWriteView } from "./app/views/Write/WriteView.js";
@@ -91,6 +92,7 @@ Ox.load(function () {
         app.$ui.aboutView = createAboutView({
           mode: app.state.mode,
           screenplayName: app.data.screenplay.name,
+          guideHref: routeUrl("/guide"),
           navigate: function (path) {
             if (app.$ui.aboutView) {
               app.$ui.aboutView.destroy();
@@ -100,6 +102,23 @@ Ox.load(function () {
           },
         });
         document.body.appendChild(app.$ui.aboutView.element);
+        return;
+      }
+
+      if (currentPath === "/guide") {
+        app.$ui.guideView = createGuideView({
+          mode: app.state.mode,
+          screenplayName: app.data.screenplay.name,
+          aboutHref: routeUrl("/about"),
+          navigate: function (path) {
+            if (app.$ui.guideView) {
+              app.$ui.guideView.destroy();
+              app.$ui.guideView = null;
+            }
+            window.location.assign(routeUrl(path));
+          },
+        });
+        document.body.appendChild(app.$ui.guideView.element);
         return;
       }
 
@@ -158,7 +177,7 @@ Ox.load(function () {
 
     handlePopState: function () {
       var currentPath = currentRoute();
-      if (currentPath === "/about") {
+      if (currentPath === "/about" || currentPath === "/guide") {
         window.location.reload();
         return;
       }
@@ -180,6 +199,7 @@ Ox.load(function () {
           app: app,
           homeHref: routeUrl("/"),
           aboutHref: routeUrl("/about"),
+          guideHref: routeUrl("/guide"),
           onModeToggle: app.toggleMode,
           onTitleChange: function (newName) {
             app.data.screenplay.name = newName;

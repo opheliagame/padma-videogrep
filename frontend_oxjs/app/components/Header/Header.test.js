@@ -60,21 +60,25 @@ describe("createHeader", () => {
     expect(titleInput.getAttribute("aria-hidden")).toBe("true");
   });
 
-  it("links to the about page and accepts a custom mode label", () => {
+  it("links to the about and guide pages and accepts a custom mode label", () => {
     const header = createHeader({
       homeHref: "/",
       aboutHref: "/about",
+      guideHref: "/guide",
       modeLabel: "Write",
     });
 
     expect(header.querySelector(".headerBrand").textContent).toBe(
-      "pad.ma videogrep・about",
+      "pad.ma videogrep・about・guide",
     );
     expect(header.querySelector(".headerHomeLink").getAttribute("href")).toBe(
       "/",
     );
     expect(header.querySelector(".headerLink").getAttribute("href")).toBe(
       "/about",
+    );
+    expect(header.querySelectorAll(".headerLink")[1].getAttribute("href")).toBe(
+      "/guide",
     );
     expect(header.querySelector(".headerModeButton").textContent).toBe("Write");
   });

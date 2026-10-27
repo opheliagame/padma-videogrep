@@ -12,11 +12,15 @@ export function createAboutView({
   navigate,
   mode = "write",
   screenplayName = "Pad.ma Videogrep",
+  aboutHref = `${import.meta.env.BASE_URL}about`,
+  guideHref,
 } = {}) {
   const header = createHeader({
     mode,
     screenplayName,
     homeHref: import.meta.env.BASE_URL,
+    aboutHref,
+    guideHref,
     modeLabel: "Write",
     onModeToggle:
       typeof navigate === "function" ? () => navigate("/write") : undefined,
@@ -57,7 +61,7 @@ export function createAboutView({
     "https://opheliagame.github.io/garden/projects/experiments-with-text";
   essayLink.target = "_blank";
   essayLink.rel = "noopener noreferrer";
-  essayLink.textContent = "Read the project notes";
+  essayLink.textContent = "Read early project notes";
 
   const handleHomeNavigation = function (event) {
     if (typeof navigate === "function") {

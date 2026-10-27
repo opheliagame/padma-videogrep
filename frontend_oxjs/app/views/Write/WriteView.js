@@ -14,13 +14,14 @@ import "./WriteView.css";
 
 /**
  * Creates the write page with its header, scene editor, and generativity controls.
- * @param {{ app: Object, homeHref?: string, aboutHref?: string, onModeToggle?: () => void, onTitleChange?: (name: string) => void }} context
+ * @param {{ app: Object, homeHref?: string, aboutHref?: string, guideHref?: string, onModeToggle?: () => void, onTitleChange?: (name: string) => void }} context
  * @returns {{ element: Object, destroy: () => void }}
  */
 export function createWriteView({
   app,
   homeHref,
   aboutHref,
+  guideHref,
   onModeToggle,
   onTitleChange,
 }) {
@@ -31,6 +32,7 @@ export function createWriteView({
     screenplayName: app.data.screenplay.name,
     homeHref,
     aboutHref,
+    guideHref,
     onModeToggle,
     onTitleChange,
   });

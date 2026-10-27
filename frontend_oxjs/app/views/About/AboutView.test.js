@@ -5,15 +5,25 @@ import { createAboutView } from "./AboutView.js";
 
 describe("createAboutView", () => {
   it("renders the project information and page navigation", () => {
-    const view = createAboutView({ navigate: vi.fn() });
+    const view = createAboutView({
+      navigate: vi.fn(),
+      aboutHref: "/about",
+      guideHref: "/guide",
+    });
 
     expect(
       view.element.querySelector("main").getAttribute("aria-labelledby"),
     ).toBe("aboutViewTitle");
-    expect(view.element.querySelector("h1").textContent).toBe(
-      "pad.ma videogrep",
+    expect(view.element.querySelector(".headerTitleDisplay").textContent).toBe(
+      "Pad.ma Videogrep",
     );
     expect(view.element.querySelectorAll("nav a")).toHaveLength(2);
+    expect(view.element.querySelectorAll(".headerLink")).toHaveLength(2);
+    expect(
+      [...view.element.querySelectorAll(".headerLink")].map((link) =>
+        link.getAttribute("href"),
+      ),
+    ).toEqual(["/about", "/guide"]);
     expect(view.element.querySelector('a[target="_blank"]').rel).toBe(
       "noopener noreferrer",
     );
@@ -21,26 +31,19 @@ describe("createAboutView", () => {
     view.destroy();
   });
 
-  it("renders the about content and usage guide from markdown", () => {
+  it("renders the project information without the usage guide", () => {
     const view = createAboutView({ navigate: vi.fn() });
     const content = view.element.querySelector(".aboutView__content");
 
     expect(
       [...content.querySelectorAll("h2")].map((h) => h.textContent),
-    ).toEqual(["what is pad.ma", "what is videogrep", "How to use"]);
-    expect(
-      [...content.querySelectorAll("h3")].map((h) => h.textContent),
     ).toEqual([
-      "Getting started",
-      "Writing queries",
-      "Generativity controls",
-      "Where clips come from",
-      "Work in progress",
+      "what is pad.ma",
+      "what is videogrep",
+      "other readings",
     ]);
-    expect(content.querySelector("table")).not.toBeNull();
-    expect(content.textContent).toContain(
-      "Random sort does not work right now.",
-    );
+    expect(content.textContent).not.toContain("How to use");
+    expect(content.querySelector("table")).toBeNull();
 
     view.destroy();
   });
