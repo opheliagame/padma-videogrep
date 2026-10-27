@@ -29,12 +29,21 @@ Ox.load(function () {
     data: {
       currentIndex: 0,
       screenplay: {
-        name: "a story about water",
+        name: "won't you swim in the archive",
         scenes: [
           {
             name: "scene 1",
-            grammars: [{ name: "water", operatorname: "&" }],
-            queryText: "water",
+            grammars: [{ name: "archive", operatorname: "&" }],
+            queryText: "archive",
+            ast: null,
+          },
+          {
+            name: "scene 2",
+            grammars: [
+              { name: "swimming", operatorname: "&" },
+              { name: "archive", operatorname: "&" },
+            ],
+            queryText: "swimming and archive",
             ast: null,
           },
         ],
