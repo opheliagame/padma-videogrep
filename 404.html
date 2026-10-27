@@ -1,16 +1,42 @@
 <!doctype html>
 <html>
   <head>
-    <title>OxJS - Padma Videogrep</title>
+    <title>padma videogrep</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <script type="text/javascript" src="/padma-videogrep/min/Ox.js"></script>
+    <style>
+      html.landingLoading,
+      html.landingLoading body {
+        background-color: #000;
+      }
+    </style>
+    <script>
+      if (
+        window.location.pathname.replace(/\/$/, "") ===
+        "/padma-videogrep/".replace(/\/$/, "")
+      ) {
+        document.documentElement.classList.add("landingLoading");
+        [
+          "https://unpkg.com/hydra-synth@1.4.0/dist/hydra-synth.js",
+          "https://cdn.jsdelivr.net/gh/geikha/hyper-hydra@latest/hydra-src.js",
+          "https://cdn.jsdelivr.net/gh/geikha/hyper-hydra@latest/hydra-wrap.js",
+          "https://cdn.statically.io/gh/opheliagame/livecode@709eea9cfca2a1b4c279df6f7ba783747ff6b7ee/public/functions/draw-multiline-text-svg.js",
+        ].forEach(function (url) {
+          var preload = document.createElement("link");
+          preload.rel = "preload";
+          preload.as = "script";
+          preload.href = url;
+          document.head.appendChild(preload);
+        });
+      }
+    </script>
+    <script defer type="text/javascript" src="/padma-videogrep/min/Ox.js"></script>
     <!-- Utility Scripts -->
     <!-- API Scripts -->
-    <script type="text/javascript" src="/padma-videogrep/app/api/service.js"></script>
+    <script defer type="text/javascript" src="/padma-videogrep/app/api/service.js"></script>
     <!-- Component Scripts -->
     <!-- Main App Script -->
-    <script type="module" crossorigin src="/padma-videogrep/assets/index-r8XCbdlX.js"></script>
-    <link rel="stylesheet" crossorigin href="/padma-videogrep/assets/index-BzOah4bx.css">
+    <script type="module" crossorigin src="/padma-videogrep/assets/index-BZ7cJ278.js"></script>
+    <link rel="stylesheet" crossorigin href="/padma-videogrep/assets/index-DHiuxzFr.css">
   </head>
   <body></body>
 </html>
