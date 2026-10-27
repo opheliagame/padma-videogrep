@@ -117,10 +117,10 @@ describe("createWriteView", () => {
     createWriteView({ app });
     const controls =
       globalThis.Ox.SplitPanel.mock.calls[0][0].elements[1].element.children[0];
-    const sortSelect = controls.querySelector("select");
-    sortSelect.value = "date";
-    sortSelect.dispatchEvent(new Event("change", { bubbles: true }));
+    const clipCountInput = controls.querySelector('input[type="number"]');
+    clipCountInput.value = "20";
+    clipCountInput.dispatchEvent(new Event("change", { bubbles: true }));
 
-    expect(app.state.generativity.sortBy).toBe("date");
+    expect(app.state.generativity.limit).toBe(20);
   });
 });

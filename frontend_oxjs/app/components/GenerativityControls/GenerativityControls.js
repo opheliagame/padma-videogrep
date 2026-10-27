@@ -19,7 +19,10 @@ let nextInstanceId = 0;
  * @param {{ initialValues?: { length?: string, sortBy?: string, limit?: number }, onChange?: (values: { length: string, sortBy: string, limit: number }) => void }} props
  * @returns {HTMLElement}
  */
-export function createGenerativityControls({ initialValues = {}, onChange } = {}) {
+export function createGenerativityControls({
+  initialValues = {},
+  onChange,
+} = {}) {
   const instanceId = ++nextInstanceId;
   const state = {
     length: lengths.includes(initialValues.length)
@@ -80,7 +83,8 @@ export function createGenerativityControls({ initialValues = {}, onChange } = {}
     listen(input, "change", function () {
       if (!input.checked) return;
       state.length = length;
-      lengthOptions.querySelectorAll(".generativityControls__lengthOption")
+      lengthOptions
+        .querySelectorAll(".generativityControls__lengthOption")
         .forEach((label) => {
           label.classList.toggle(
             "is-active",
@@ -96,29 +100,30 @@ export function createGenerativityControls({ initialValues = {}, onChange } = {}
   lengthGroup.append(lengthOptions);
   controls.append(lengthGroup);
 
-  const sortGroup = document.createElement("div");
-  sortGroup.className = "generativityControls__group";
-  const sortId = `generativitySort${instanceId}`;
-  const sortLabel = document.createElement("label");
-  sortLabel.className = "generativityControls__label";
-  sortLabel.htmlFor = sortId;
-  sortLabel.textContent = "sort";
-  const sortSelect = document.createElement("select");
-  sortSelect.id = sortId;
-  sortSelect.className = "generativityControls__sortSelect";
-  sortSelect.value = state.sortBy;
-  sorts.forEach(([value, label]) => {
-    const option = document.createElement("option");
-    option.value = value;
-    option.textContent = label;
-    sortSelect.append(option);
-  });
-  listen(sortSelect, "change", function () {
-    state.sortBy = sortSelect.value;
-    emitChange();
-  });
-  sortGroup.append(sortLabel, sortSelect);
-  controls.append(sortGroup);
+  // TODO: impl sort for clips
+  // const sortGroup = document.createElement("div");
+  // sortGroup.className = "generativityControls__group";
+  // const sortId = `generativitySort${instanceId}`;
+  // const sortLabel = document.createElement("label");
+  // sortLabel.className = "generativityControls__label";
+  // sortLabel.htmlFor = sortId;
+  // sortLabel.textContent = "sort";
+  // const sortSelect = document.createElement("select");
+  // sortSelect.id = sortId;
+  // sortSelect.className = "generativityControls__sortSelect";
+  // sortSelect.value = state.sortBy;
+  // sorts.forEach(([value, label]) => {
+  //   const option = document.createElement("option");
+  //   option.value = value;
+  //   option.textContent = label;
+  //   sortSelect.append(option);
+  // });
+  // listen(sortSelect, "change", function () {
+  //   state.sortBy = sortSelect.value;
+  //   emitChange();
+  // });
+  // sortGroup.append(sortLabel, sortSelect);
+  // controls.append(sortGroup);
 
   const limitGroup = document.createElement("div");
   limitGroup.className = "generativityControls__group";

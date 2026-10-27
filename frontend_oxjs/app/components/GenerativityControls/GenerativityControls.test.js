@@ -20,7 +20,7 @@ describe("createGenerativityControls", () => {
     );
     expect(controls.querySelectorAll('input[type="radio"]')).toHaveLength(3);
     expect(controls.querySelector('input[value="medium"]').checked).toBe(true);
-    expect(controls.querySelector("select").value).toBe("relevance");
+    expect(controls.querySelector("select")).toBeNull();
     expect(controls.querySelector('input[type="number"]').value).toBe("10");
     expect(controls.querySelector('[aria-live="polite"]').textContent).toBe(
       "5-15 sec",
@@ -45,16 +45,13 @@ describe("createGenerativityControls", () => {
       "> 15 sec",
     );
 
-    const sortSelect = controls.querySelector("select");
-    sortSelect.value = "random";
-    sortSelect.dispatchEvent(new Event("change", { bubbles: true }));
     const limitInput = controls.querySelector('input[type="number"]');
     limitInput.value = "500";
     limitInput.dispatchEvent(new Event("change", { bubbles: true }));
 
     expect(onChange).toHaveBeenLastCalledWith({
       length: "long",
-      sortBy: "random",
+      sortBy: "date",
       limit: 50,
     });
     expect(limitInput.value).toBe("50");
@@ -63,11 +60,11 @@ describe("createGenerativityControls", () => {
   it("removes change listeners when destroyed", () => {
     const onChange = vi.fn();
     const controls = createGenerativityControls({ onChange });
-    const sortSelect = controls.querySelector("select");
+    const lengthInput = controls.querySelector('input[value="long"]');
 
     destroyGenerativityControls(controls);
-    sortSelect.value = "date";
-    sortSelect.dispatchEvent(new Event("change", { bubbles: true }));
+    lengthInput.checked = true;
+    lengthInput.dispatchEvent(new Event("change", { bubbles: true }));
 
     expect(onChange).not.toHaveBeenCalled();
   });
