@@ -1,10 +1,8 @@
 import { startLandingSketch } from "./landingSketch.js";
 import "./LandingView.css";
 
-const TITLE = "pad.ma videogrep";
-
 /**
- * Creates the landing view: a hydra sketch background with the project title.
+ * Creates the landing view with a hydra sketch background.
  * Call `exit()` to fade the landing out; `onExited` fires once the fade ends.
  * @param {{ fadeDuration?: number, onExited?: () => void }} context
  * @returns {{ element: HTMLElement, exit: () => void, destroy: () => void }}
@@ -23,22 +21,13 @@ export function createLandingView({ fadeDuration = 3000, onExited } = {}) {
   canvas.className = "landingView__canvas";
   canvas.setAttribute("aria-hidden", "true");
 
-  const main = document.createElement("main");
-  main.className = "landingView__main";
-
-  const title = document.createElement("h1");
-  title.className = "landingView__title";
-  title.textContent = TITLE;
-
-  main.append(title);
-  element.append(canvas, main);
+  element.append(canvas);
 
   async function startSketch() {
     const reduceMotion = window.matchMedia?.(
       "(prefers-reduced-motion: reduce)",
     ).matches;
     if (reduceMotion) {
-      element.classList.add("landingView--noSketch");
       return;
     }
 
@@ -47,9 +36,12 @@ export function createLandingView({ fadeDuration = 3000, onExited } = {}) {
         canvas,
         signal: abortController.signal,
       });
+      if (!isMounted) {
+        stopSketch?.();
+        stopSketch = null;
+      }
     } catch (error) {
       if (!isMounted) return;
-      element.classList.add("landingView--noSketch");
       console.warn("Landing sketch unavailable:", error);
     }
   }

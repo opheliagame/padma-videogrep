@@ -17,44 +17,11 @@
 }
 
 .landingView__canvas {
+  background-color: transparent;
   position: absolute;
   inset: 0;
   width: 100%;
   height: 100%;
-}
-
-.landingView__main {
-  position: relative;
-  padding: 0 24px;
-  text-align: center;
-}
-
-/* Visually hidden; the hydra sketch renders the title, this keeps it for screen readers */
-.landingView__title {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  margin: -1px;
-  padding: 0;
-  overflow: hidden;
-  clip: rect(0 0 0 0);
-  clip-path: inset(50%);
-  white-space: nowrap;
-  border: 0;
-}
-
-.landingView--noSketch .landingView__title {
-  position: static;
-  width: auto;
-  height: auto;
-  margin: 0;
-  overflow: visible;
-  clip: auto;
-  clip-path: none;
-  color: #fff;
-  font-family: system-ui, sans-serif;
-  font-size: clamp(48px, 10vw, 160px);
-  font-weight: 900;
 }
 
 @media (prefers-reduced-motion: reduce) {

@@ -1,6 +1,6 @@
 import { createAboutView } from "./app/views/About/AboutView.js";
 import { createGuideView } from "./app/views/Guide/GuideView.js";
-import { createLandingView } from "./app/views/Landing/LandingView.js";
+import { landingView } from "./app/views/Landing/landing.js";
 import { createWatchView } from "./app/views/Watch/WatchView.js";
 import { createWriteView } from "./app/views/Write/WriteView.js";
 import { storageManager } from "./app/core/Storage/StorageManager.js";
@@ -26,7 +26,7 @@ window.onerror = function (error, url) {
 
 Ox.load(function () {
   var app = (window.oxjs = {
-    $ui: {},
+    $ui: { landingView },
     data: {
       currentIndex: 0,
       screenplay: {
@@ -122,16 +122,6 @@ Ox.load(function () {
         return;
       }
 
-      if (currentPath === "/") {
-        app.$ui.landingView = createLandingView({
-          onExited: function () {
-            app.$ui.landingView.destroy();
-            app.$ui.landingView = null;
-          },
-        });
-        document.body.appendChild(app.$ui.landingView.element);
-      }
-
       app.api = Ox.API({ url: API_URL }, function () {
         console.log("API initialized");
 
@@ -140,6 +130,7 @@ Ox.load(function () {
           // renderModePage empties the body, so put the landing back on top before fading
           document.body.appendChild(app.$ui.landingView.element);
           app.$ui.landingView.exit();
+          app.$ui.landingView = null;
         }
         app.state.loaded = true;
         window.addEventListener("popstate", app.handlePopState);
